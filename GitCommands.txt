@@ -1,0 +1,96 @@
+
+
+git config --global user.name "Your Name Here"
+git config --global user.email "your_email@youremail.com"
+git config --global core.autocrlf true
+git config --global core.safecrlf true
+
+git init	// runs inside application folder, only after this, it will receive further commands, u create directory structure for git
+
+git status	// shows new, modified files and current branch
+	if it does not intended branch, u can change ref: refs/heads/branchname in head file
+
+git remote add origin https://github.com/username/myproject.git 	//  give url of online repo, origin is a nickname, u can give any name
+git remote -v   // to conform above commands
+
+git add Readme.txt        // add particular file to git attention, create snapshots
+git commit -m “Add Readme.txt”  // commit by adding message (create checks points)
+
+git add .	// add all files
+git commit -m "message"
+
+git push origin branchname	// push to specific branch
+
+	if following error come
+	! [rejected]          staging -> staging (non-fast-forward)
+	error: failed to push some refs to 'https://github.com/ranjanmondal4/angulardemo.git'
+git pull origin staging
+
+	if following error come
+	fatal: refusing to merge unrelated histories
+git pull origin staging --allow-unrelated-histories
+
+git pull origin branchname --allow-unrelated-histories
+
+CONFLICT (add/add): Merge conflict in README.md
+Automatic merge failed; fix conflicts and then commit the result.
+
+	after fixing issue
+	add and commit files and push it
+
+press esc and then shift + zz to exit merge tool
+
+git branch branchname	// to create branch
+git checkout branchname		// to navigate another branchname
+
+git checkout -- <file>		// to undo changes
+
+git log --pretty=oneline	// produces logs in one line
+git log --pretty=oneline --max-count=2
+git log --pretty=oneline --since='5 minutes ago'
+git log --pretty=oneline --until='5 minutes ago'
+git log --pretty=oneline --author=<your name>
+git log --pretty=oneline --all
+$ git log --pretty=format:"%h %ad | %s%d [%an]" --graph --date=short
+* fa3c141 2011-03-09 | Added HTML header (HEAD, master) [Alexander Shvets]
+* 8c32287 2011-03-09 | Added standard HTML page tags [Alexander Shvets]
+* 43628f7 2011-03-09 | Added h1 tag [Alexander Shvets]
+
+Let’s look at it in detail:
+--pretty="..." defines the output format.
+%h is the abbreviated hash of the commit
+%d commit decorations (e.g. branch heads or tags)
+%ad is the commit date
+%s is the comment
+%an is the name of the author
+--graph tells git to display the commit tree in the form of an ASCII graph layout
+--date=short keeps the date format short and nice
+
+git checkout <hash>		// get latest updates from repo
+* 911e8c9 2011-03-09 | First Commit [Alexander Shvets]
+
+	if u wanted undo changes
+git status
+git checkout filename
+
+	if u add particular file and unstage it
+git add file.html
+git reset head file.html
+
+	if u discard changes in previous commit
+git revert head --no-edit
+
+	if u commit before, then again u want to commit with u changes
+git add file.html
+git commit --amend -m "commit again"
+
+	if u want certain files not committed to repo and never shows up on git status
+	open file .gitignore, and type path of file.
+
+	if u have empty directory and u want fresh copy of project on github
+git clone https://github.com/ranjanmondal4/angulardemo.git
+
+	to create new branch
+git checkout -b branchname
+	switch to another branch
+git checkout existingBranchName
