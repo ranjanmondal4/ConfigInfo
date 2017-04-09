@@ -80,7 +80,7 @@ git reset head file.html
 	if u discard changes in previous commit
 git revert head --no-edit
 
-	if u commit before, then again u want to commit with u changes
+	if u commit before, then again u want to commit with ur changes
 git add file.html
 git commit --amend -m "commit again"
 
@@ -94,3 +94,100 @@ git clone https://github.com/ranjanmondal4/angulardemo.git
 git checkout -b branchname
 	switch to another branch
 git checkout existingBranchName
+
+
+git log
+
+	to see difference between last commit and unstaged data (before add)
+git diff
+	to see difference between last commit and staged data (after add)
+git diff --staged
+	if u want to discard changes
+git checkout --filename
+	to undoing commit
+git reset --soft HEAD^
+
+	adding to last commit
+git add filename
+git commit --amend   or git commit --amend -m "modify last commit message"
+
+	if u horribly wrong, want to undo last commit and all changes
+git reset --hard HEAD^
+	want to undo last 2 commits
+git reset --hard head^^
+
+	to remove remote
+git remote rm origin
+	to clone a repo if u are fresh to start
+git clone http://url.git
+	to create new branch
+git branch staging
+
+	to know which branch or timeline we are in
+git branch
+	to move to another branch
+git checkout branchname
+	to merge staging to master
+git checkout master
+git merge staging
+	to delete branch
+git branch -d staging
+
+
+----------------------------:w for write  and :q for quit
+
+	when there is conflict
+	
+	<<<<<<<<<<< head 
+		this is urs code
+	===================
+		others code
+	>>>>>>>>>>>>>>>>>
+	
+	correct this
+git commit -a
+	
+	to see all remote branch
+git branch -r
+	to see all remote and local branches and which r out of date
+git remote show origin
+
+	to remove remote branch
+git push origin :staging
+	to remove local branch if u don't have any changes to commit
+git branch -d staging
+	but if u have and still u want to delete it
+git branch -D staging
+	if u want to push commit to unexisted branch and want to delete stale references
+git remote prune origin
+
+========================== tags
+a tag is reference to commit used mostly for release versioning
+	to list tags
+git tags 
+	to checkout code at commit
+git checkout v0.0.1 
+	to add new tag
+git tag -a v0.0.3 -m "version 3"
+	to push new tags
+git push --tags
+
+
+
+https://www.youtube.com/watch?v=byinJdoFVoA&list=PL4KQBOUw6E7sgf5KIEMUcTT_zWpNmYfbd&index=6
+
+	to pull any changes but does not merge them
+git fetch  =======>  create 2 timeline master and origin/master
+git rebase ==============>do following changes
+	move uncommited changes from master to temporary area
+	then move all origin/master commit to master one at a timeline
+	then commits from temporary area to master one at a timeline
+	
+	so
+	git checkout admin
+	git rebase master  =====> first run master commits and then run additional admin commits
+	git checkout master
+	git merge admin
+if conflicts occur solve conflict
+git rebase --continue
+
