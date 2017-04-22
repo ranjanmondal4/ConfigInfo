@@ -1,0 +1,78 @@
+to install mongo db
+download MongoDB for Windows 64-bit runs only on Windows Server 2008 R2, Windows 7 64-bit, and newer versions of Windows. 
+to check architechture
+	wmic os get osarchitecture
+
+for data dictionary
+	md \data\db
+to start mongo
+	C:\Program Files\MongoDB\Server\3.4\bin>mongod
+	in another cmd
+	C:\Program Files\MongoDB\Server\3.4\bin>mongo
+	
+	C:\Program Files\MongoDB\Server\3.4\bin>mongod --directoryperdb --dbpath C:\data\db --logpath C:\logs\mongo.log --logappend --rest --install
+2017-04-15T10:02:56.103+0530 I CONTROL  [main] ** WARNING: --rest is specified without --httpinterface,
+2017-04-15T10:02:56.108+0530 I CONTROL  [main] **          enabling http interface
+
+to start server
+net start MongoDB
+
+to shell mongo shell
+mongo
+
+to clear console 
+clr
+
+to show databases
+show dbs
+
+to create database or switch database
+use databaseName
+
+to see all collection
+show collections
+
+to check current database
+db
+
+to create login user
+db.createUser({
+	user: "brad",
+	pwd:"1234",
+	roles: ["readWrite","dbAdmin"]
+});
+
+to create collection
+db.createCollection('customer');
+
+to show collection
+show collections
+
+to insert row
+db.customer.insert({first_name:"John", last_name:"rease"});
+
+to show all rows
+db.customer.find();
+db.customer.find().preety();
+
+to insert multiple rows
+db.customer.insert([{first_name:"John", last_name:"rease"},{first_name:"Steven", last_name:"smith",gender: "male"}]);
+
+to update 
+db.customer.update({first_name:"John"},{first_name:"John", last_name:"smith",gender: "male"});
+db.customer.update({first_name:"John"},{$set:{gender: "male"}});
+db.customer.update({first_name:"John"},{$set:{age: 45}});
+db.customer.update({first_name:"John"},{$inc:{age: 5}});
+db.customer.update({first_name:"John"},{$unset:{age: 1}});
+db.customer.update({first_name:"John"},{first_name:"John", last_name:"smith",gender: "male"},{upsert: true});
+db.customer.update({first_name:"John"},{$rename:{"gender": "sex"}});
+db.customer.remove({first_name:"John"});
+db.customer.remove({first_name:"John"},{justOne: true});
+db.customer.find({first_name:"John"});
+db.customer.find({$or: [{first_name:"John"},{first_name:"Stevan"]});
+db.customer.find({age:{$lt:40}});
+db.customer.find().sort({last_name:1);
+db.customer.find({last_name:1}).count();
+db.customer.find().limit(4);
+db.customer.find().limit(4).sort({last_name:1);
+db.customer.find().forEach(function(doc){print("Customer Name : " + doc.first_name)});
