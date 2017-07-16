@@ -20,6 +20,10 @@ net start MongoDB
 to shell mongo shell
 mongo
 
+
+u can download https://robomongo.org/download
+create new connection and start ur operation.
+
 to clear console 
 clr
 
