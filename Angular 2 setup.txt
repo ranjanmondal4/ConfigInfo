@@ -26,3 +26,12 @@ ng serve   ---->   http://localhost:4200/
 
 https://www.youtube.com/watch?v=YKi2A2PFTnc&index=5&list=PL4cUxeGkcC9jqhk5RvBiEwHMKSUXPyng0
 https://www.youtube.com/watch?v=7RQDIChgaZk&list=PL4cUxeGkcC9jqhk5RvBiEwHMKSUXPyng0&index=9
+
+https://www.youtube.com/watch?v=DBjPIabiRNg
+
+npm install -g typescript
+ng generate component othercomponent
+cd othercomponent
+ng g c another --flat -it -is
+https://www.youtube.com/watch?v=I-EiQD3x8xY&index=2&list=PL55RiY5tL51qIb5VW2ywbT12UZeqmzBAu
+https://www.youtube.com/watch?v=Dv_5An-OvCk&list=PL55RiY5tL51qIb5VW2ywbT12UZeqmzBAu&index=14
