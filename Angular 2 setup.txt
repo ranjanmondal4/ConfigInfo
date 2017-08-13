@@ -33,5 +33,17 @@ npm install -g typescript
 ng generate component othercomponent
 cd othercomponent
 ng g c another --flat -it -is
+
+to create a pipe
+cd src => cd app => md pipe(folder) => cd pipe
+ng generate pipe capitilize  ====> it create pipe, update module.ts
+
+For input and output view etc...
+https://www.youtube.com/watch?v=I317BhehZKM
+https://toddmotto.com/
+
+
+tsc -version  ==> typescript version
+tsc filename.ts ==> compiles into js file.
 https://www.youtube.com/watch?v=I-EiQD3x8xY&index=2&list=PL55RiY5tL51qIb5VW2ywbT12UZeqmzBAu
 https://www.youtube.com/watch?v=Dv_5An-OvCk&list=PL55RiY5tL51qIb5VW2ywbT12UZeqmzBAu&index=14
