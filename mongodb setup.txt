@@ -20,6 +20,21 @@ net start MongoDB
 to shell mongo shell
 mongo
 
+
+u can download https://robomongo.org/download
+
+db.createCollection('sales')
+
+db.sales.insert({ _id: 1, cust_id: "abc1", ord_date: ISODate("2012-11-02T17:04:11.102Z"), status: "A", amount: 50 })
+db.sales.find()
+db.sales.update({"cust_id":"xyz1"},{"$set":{"place": ["Delhi"]}}, {multi:true})
+db.sales.aggregate([
+                     { $group: { _id: "$cust_id", min: { $min: "$amount" }, max: { $max: "$amount" } } },
+                     {$sort: {max:1}}
+                   ])
+           
+create new connection and start ur operation.
+
 to clear console 
 clr
 
@@ -76,3 +91,5 @@ db.customer.find({last_name:1}).count();
 db.customer.find().limit(4);
 db.customer.find().limit(4).sort({last_name:1);
 db.customer.find().forEach(function(doc){print("Customer Name : " + doc.first_name)});
+
+https://www.youtube.com/watch?v=0TV8kTw9-HM&index=95&list=PLAwxTw4SYaPnq2iMkfPxmXwBFjwc_AXK_

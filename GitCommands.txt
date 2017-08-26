@@ -175,6 +175,7 @@ git push --tags
 
 
 https://www.youtube.com/watch?v=byinJdoFVoA&list=PL4KQBOUw6E7sgf5KIEMUcTT_zWpNmYfbd&index=6
+safest way to merge on branch to another in git   https://www.youtube.com/watch?v=yyLiplDQtf0
 
 	to pull any changes but does not merge them
 git fetch  =======>  create 2 timeline master and origin/master
