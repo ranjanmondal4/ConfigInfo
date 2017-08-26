@@ -1,0 +1,49 @@
+npm install -g typescript
+
+https://github.com/mschwarzmueller/angular-2-beta-boilerplate
+npm install
+npm start
+
+======
+https://angular.io/docs/ts/latest/quickstart.html
+download quickstart seed
+cd quickstart
+npm install                      // install all dependencies in package.json
+npm start						// start dev server
+
+how to install lite server
+https://scotch.io/bar-talk/a-fast-and-convenient-development-server-with-lite-server
+https://www.youtube.com/watch?v=-zW1zHqsdyc
+
+https://jsonplaceholder.typicode.com/             for fetching json data from fake server
+=========== with cli
+node -v
+npm install -g angular-cli
+create a folder with appname
+cd appname
+ng new appname
+ng serve   ---->   http://localhost:4200/
+
+https://www.youtube.com/watch?v=YKi2A2PFTnc&index=5&list=PL4cUxeGkcC9jqhk5RvBiEwHMKSUXPyng0
+https://www.youtube.com/watch?v=7RQDIChgaZk&list=PL4cUxeGkcC9jqhk5RvBiEwHMKSUXPyng0&index=9
+
+https://www.youtube.com/watch?v=DBjPIabiRNg
+
+npm install -g typescript
+ng generate component othercomponent
+cd othercomponent
+ng g c another --flat -it -is
+
+to create a pipe
+cd src => cd app => md pipe(folder) => cd pipe
+ng generate pipe capitilize  ====> it create pipe, update module.ts
+
+For input and output view etc...
+https://www.youtube.com/watch?v=I317BhehZKM
+https://toddmotto.com/
+
+
+tsc -version  ==> typescript version
+tsc filename.ts ==> compiles into js file.
+https://www.youtube.com/watch?v=I-EiQD3x8xY&index=2&list=PL55RiY5tL51qIb5VW2ywbT12UZeqmzBAu
+https://www.youtube.com/watch?v=Dv_5An-OvCk&list=PL55RiY5tL51qIb5VW2ywbT12UZeqmzBAu&index=14

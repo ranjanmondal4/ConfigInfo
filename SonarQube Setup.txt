@@ -1,0 +1,67 @@
+Go to website:  https://www.sonarqube.org/#_
+click on download 
+download any stable or latest releases.
+let i have downloaded 5.6.6 version.
+unzipped in any drive.
+click on folder , go inside bin folder, choose ur system os, get inside the folder.
+eg C:\sonarqube-5.6.6\bin\windows-x86-64
+go to shell Type StartSonar
+eg  C:\sonarqube-5.6.6\bin\windows-x86-64>StartSonar
+it opens by default on port 9090
+eg-  http://localhost:9000
+
+inside dashboard tab, u will find project tab. but no project is selected.
+
+Now U have Sonar Scanner
+
+Go to https://www.sonarqube.org/downloads/
+go to Related Tools sections
+under it Sonar Qube Scanner
+click on Documenatation and download
+
+it will re direct to new page.
+click on analyzing with SonarQube Scanner and click on Advanced SonarQube Scanner Usages
+download it according to ur system configuration.
+1.Linux 64 bit	 2.Windows 64 bit	 3.Mac OS X 64 bit	4.Any*
+
+unzip it and go inside bin folder, choose ur system configuration
+from there go to ur shell or command prompt
+eg  C:\sonarqube-5.6.6\bin\windows-x86-64
+
+leave it as it is.
+
+Go to ur java project, create file sonar-project.properties.
+paste code and save it. 
+
+# Required metadata
+sonar.projectKey=java-sonar-runner-crud
+sonar.projectName=Crud
+sonar.projectVersion=1.0
+
+# Comma-separated paths to directories with sources (required)
+sonar.sources=src
+
+# Language
+sonar.language=java
+
+# Encoding of the source files
+sonar.sourceEncoding=UTF-8
+
+
+Go to command prompt or shell in second step
+type --->     sonar-scanner         and hit enter.
+
+eg.  C:\Crud>sonar-scanner
+
+it will take some time and after that
+INFO: ------------------------------------------------------------------------
+INFO: EXECUTION SUCCESS
+INFO: ------------------------------------------------------------------------
+INFO: Total time: 37.086s
+INFO: Final Memory: 48M/244M
+INFO: ------------------------------------------------------------------------
+
+
+Go to localhost:9000/dashboard
+
+u will see ur project name and sonarqube is installed in ur project

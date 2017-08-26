@@ -1,0 +1,72 @@
+npm install -g grunt-cli  // to access grunt command.
+npm init  // to create package.json
+npm install -S grunt  //  install grunt in project, u see in package as dependency
+ or 
+npm install grunt --save-dev
+
+create Gruntfile.js
+
+in Gruntfile.js
+
+module.exports = function(grunt){   // to run grunt speak
+	grunt.registerTask('speak',function(){
+		console.log('i am speak');
+	});
+	grunt.registerTask('yell',function(){  // to run grunt yell
+		console.log('i am yell');
+	});
+	grunt.registerTask('default',['speak','yell']);  // to run grunt
+};
+
+why u need a build system.
+what should a build system do.
+-repetitive tasks
+	- concatenating javascript
+	-prefixing css
+-Utilities
+	-jshint
+	-uglify compress/minify javascript
+-local server
+-live reload
+
+grunt - gulp - brunch
+
+why this is good for u
+page speed
+-less file requests for page load
+-faster file requests
+
+development workflow
+-u can see cool technologies
+-u can break code into multiples files
+-easier to avoid code conflicts.
+-u can avoid annoying, repetitive tasks.
+Go to grunt website.
+
+
+https://www.youtube.com/watch?v=XJ5F-Auhato
+
+how to upload angular 2 project on server.
+ssh root@104.131.50.243 (after create droplets)
+
+npm -i -g typescript @angular/cli
+
+git clone repo(ur repository)
+
+cd project folder
+
+ng serve --host=0.0.0.0
+
+npm i -g http-server
+
+ng build --aot
+
+ng build --prod
+
+ng build --prod --base-href /whatever
+
+npm i -g angular-cli-ghpages
+
+ng build --prod --base-href https://yourusername.github.io/reponame/
+
+ngh
