@@ -1,0 +1,11 @@
+npm install --save-dev webpack@1.13.1
+
+if there is some issue. then npm set registry http://registry.npmjs.org/
+
+npm install --save-dev ts-loader@0.8.2
+in package.json
+"devDependencies": {
+   
+    "ts-loader": "^0.8.2",
+    "webpack": "^1.13.1"
+  }
