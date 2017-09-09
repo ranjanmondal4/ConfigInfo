@@ -1,0 +1,7 @@
+inside root directory of spring boot application
+
+mvn clean install
+
+java -jar target/jarname.jar
+
+https://www.youtube.com/watch?v=3s2lSD50-JI
