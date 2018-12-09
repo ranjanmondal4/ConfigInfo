@@ -203,7 +203,10 @@ git checkout .   		// for all changes in all files
 git reset HEAD <file_name>   // particular file
 git reset --soft HEAD~      // for all changes in all files
 
-
+ 	// revert particular commit.
+ git pull origin <branch_name>
+ git revert -m 1 <commit_id>
+ git push origin <branch_name>
 
 
 // following need to be reviewed
@@ -220,17 +223,6 @@ git reset --hard HEAD^
 	want to undo last 2 commits
 git reset --hard head^^
 
-
- 
- 1. first to branch where you want to revert.
- git pull origin branchName
-
- git revert -m 1 commitID
-
- git push origin branchName
-
-
- 
 
 git reset --head origin/current_branch_name
 
@@ -269,8 +261,3 @@ git rebase ==============>do following changes
 	git merge admin
 if conflicts occur solve conflict
 git rebase --continue
-
-
-
-
-
