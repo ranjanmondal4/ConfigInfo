@@ -25,15 +25,12 @@ git status -s // s for short, display short descriptions
 
 
 /**
-	For ignoring files to be added in Git. Create .gitignore file
-	  **/
+	For ignoring files to be added in Git. Create .gitignore file	  
+**/
 cat .gitignore  // add files and paths of files
 git add .gitignore
 git commit -m "Adding gitignore"
 
-git diff // show modified contents in the files before staged.
-git diff file_name // show modified contents in specific file before staged.
-git diff --staged  // show contents which are staged but not committed yet.
 
 // to remove file from stag and working directory
 git rm file_name
@@ -60,39 +57,21 @@ git add .                 // add all files
 git commit -m “message here”  // commit by adding message (create checks points)
 
 
-git push origin branchname	// push to specific branch
+// create new branch and move to it.
+git branch branch_name			// to create branch
+git checkout branch_name		// to navigate another branchname
+		or
+git checkout -b branch_name
 
-	if following error come
-	! [rejected]          staging -> staging (non-fast-forward)
-	error: failed to push some refs to 'https://github.com/ranjanmondal4/angulardemo.git'
-git pull origin staging
-
-	if following error come
-	fatal: refusing to merge unrelated histories
-git pull origin staging --allow-unrelated-histories
-
-git pull origin branchname --allow-unrelated-histories
-
-CONFLICT (add/add): Merge conflict in README.md
-Automatic merge failed; fix conflicts and then commit the result.
-
-	after fixing issue
-	add and commit files and push it
-
-press esc and then shift + zz to exit merge tool
-
-git branch branchname	// to create branch
-git checkout branchname		// to navigate another branchname
-
-git checkout -- <file>		// to undo changes
 
 /**
-	to commits history 
+	Display Commits history 
 **/
 git log -2 // recents two commits.
 git log -p -2 // recents two commits with modifications in those files
 git log -2 --stat // recents two commands with files names and number of lines modified
 git log -2 --pretty=oneline	// recents two commits in one lines
+
 // more options in --pretty
 git log -2 --pretty=short	
 git log -2 --pretty=full
@@ -163,8 +142,10 @@ git log --oneline --decorate --graph --all
 // shows commits of remote branch which are not in local branch
 git log --no-merges <local_branch>..origin/<remote_branch>
 
+
+
 /**
-cherry pick - add commits from one branch to another.
+	cherry pick - add commits from one branch to another.
 **/
 git checkout <branch_name> // move to branch where you add the commit
 git cherry-pick d467740
@@ -182,115 +163,81 @@ git cherry-pick --abort
 // to cherry pick merge instead of commit
 git cherry-pick -m 1 <hash>   // and push the changes
 
-// Correct the last message(Subject) 
+	// Modify the last message(Subject) 
+git commit --amend       //  modify last commit message 
+
+git add <forgotten_file>   // if you have committed, and forgot to add few files and want to make same commit.
 git commit --amend
-// if you have committed, and forgot to add few files and want to make same commit.
-git add forgotten_file
-git commit --amend
+     or
+git commit --amend -m "modify last commit message"
 
 
-git branch  // list all branches with current branch
-git branch -v // list all branches with current branch and last commits
+	// Listing branches
+git branch  	// list all branches with current branch
+git branch -v 	// list all branches with current branch and last commits
+git branch -r	// list all remote branches
+git remote show origin   // to see all remote and local branches and which are out of date
 
 git branch --merged // list all branches which are merged to current branch
 git branch --no-merged // list all branches which are not merged to current branch
 
+
+	// Delete branch
 git branch -d <branch_name>  // to delete allready merged branch
 git branch -D <branch_name>  // to delete un-merged branch and lose their work.
 
+
+	// Diff commands
 git diff --check  // identifies possible whitespace errors
+git diff          // to see difference between last commit and unstaged data (before add)
+git diff --staged // to see difference between last commit and staged data (after add)
+git diff file_name // show modified contents in specific file before staged.
 
-git checkout <hash>		// get latest updates from repo
-* 911e8c9 2011-03-09 | First Commit [Alexander Shvets]
 
-//	if you wanted undo changes or modification before stage(add)
-git checkout filename
-git checkout .   // for all changes in all files
 
-// if you add particular file and want to unstage(un-add) it.
-git reset HEAD file.html
+	// Undo changes or modification before stage(add)
+git checkout <file_name>   // particular file
+git checkout .   		// for all changes in all files
+
+	// Undo changes or modification after stage(add) means unstage(un-add)
+git reset HEAD <file_name>   // particular file
+git reset --soft HEAD~      // for all changes in all files
+
+
+
+
+// following need to be reviewed
 
 	if u discard changes in previous commit
 git revert head --no-edit
 
-	if u commit before, then again u want to commit with ur changes
-git add file.html
-git commit --amend -m "commit again"
-
-	if u want certain files not committed to repo and never shows up on git status
-	open file .gitignore, and type path of file.
-
-	if u have empty directory and u want fresh copy of project on github
-git clone https://github.com/ranjanmondal4/angulardemo.git
-
-	to create new branch
-git checkout -b branchname
-	switch to another branch
-git checkout existingBranchName
-
-
-	to see difference between last commit and unstaged data (before add)
-git diff
-	to see difference between last commit and staged data (after add)
-git diff --staged
-	if u want to discard changes
-git checkout --filename
 	to undoing commit
 git reset --soft HEAD^
 
-	adding to last commit
-git add filename
-git commit --amend   or git commit --amend -m "modify last commit message"
 
 	if u horribly wrong, want to undo last commit and all changes
 git reset --hard HEAD^
 	want to undo last 2 commits
 git reset --hard head^^
 
-	to remove remote
-git remote rm origin
-	to clone a repo if u are fresh to start
-git clone http://url.git
-	to create new branch
-git branch staging
 
-	to know which branch or timeline we are in
-git branch
-	to move to another branch
-git checkout branchname
-	to merge staging to master
-git checkout master
-git merge staging
-	to delete branch
-git branch -d staging
+ 
+ 1. first to branch where you want to revert.
+ git pull origin branchName
+
+ git revert -m 1 commitID
+
+ git push origin branchName
 
 
-----------------------------:w for write  and :q for quit
+ 
 
-	when there is conflict
-	
-	<<<<<<<<<<< head 
-		this is urs code
-	===================
-		others code
-	>>>>>>>>>>>>>>>>>
-	
-	correct this
-git commit -a
-	
-	to see all remote branch
-git branch -r
-	to see all remote and local branches and which r out of date
-git remote show origin
+git reset --head origin/current_branch_name
 
-	to remove remote branch
-git push origin :staging
-	to remove local branch if u don't have any changes to commit
-git branch -d staging
-	but if u have and still u want to delete it
-git branch -D staging
-	if u want to push commit to unexisted branch and want to delete stale references
-git remote prune origin
+git pull origin staging --allow-unrelated-histories
+
+git pull origin branchname --allow-unrelated-histories
+
 
 ========================== tags
 a tag is reference to commit used mostly for release versioning
@@ -324,26 +271,6 @@ if conflicts occur solve conflict
 git rebase --continue
 
 
- 
- 1. first to branch where you want to revert.
- git pull origin branchName
-
- git revert -m 1 commitID
-
- git push origin branchName
 
 
- //After adding and committing but not push. You want to unadd.
- 1. git reset HEAD <file_name> 
-		or
- 2. git reset --soft HEAD~
 
- // Reset Modified file (not staged yet)
- 1. git checkout <file_name>
-		or
- 2. git checkout .  // all modified files
-
-
-git reset --head origin/current_branch_name
-
-// 
