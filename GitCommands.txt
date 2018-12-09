@@ -5,19 +5,60 @@ git config --global user.email "your_email@youremail.com"
 git config --global core.autocrlf true
 git config --global core.safecrlf true
 
-git init	// runs inside application folder, only after this, it will receive further commands, u create directory structure for git
+git init	
+/**
+ run inside application folder,
+ it will create .git folder inside application.
+ Now you can start tracking version of your application.
+ **/
 
-git status	// shows new, modified files and current branch
-	if it does not intended branch, u can change ref: refs/heads/branchname in head file
+ git clone https://github.com/libgit2/libgit2   // clones repo from github
+ git clone https://github.com/libgit2/libgit2 mylib  // clones repo with folder name mylib
+
+git status	// shows status means untracked, modified and deleted files and current branch
+git status -s // s for short, display short descriptions
+	output:
+		M README    ---> Modified file not staged yet.
+		MM Rakefile   ---> Modified and staged and then modified  
+		A lib/git.rb   ----> Staged (added)
+		?? LICENSE.txt  ---> Untracked File
+
+
+/**
+	For ignoring files to be added in Git. Create .gitignore file
+	  **/
+cat .gitignore  // add files and paths of files
+git add .gitignore
+git commit -m "Adding gitignore"
+
+git diff // show modified contents in the files before staged.
+git diff file_name // show modified contents in specific file before staged.
+git diff --staged  // show contents which are staged but not committed yet.
+
+// to remove file from stag and working directory
+git rm file_name
+git commit -m "message-here"
+
+// if file is modified, then staged. and you want to remove
+git rm -f file_name  // f for force removal
+git commit -m "message-here"
+
+git mv file_from file_to  // renaming file in git.
+// this is similar to following commands
+mv file_from file_to
+git rm file_from
+git add file_to
+
 
 git remote add origin https://github.com/username/myproject.git 	//  give url of online repo, origin is a nickname, u can give any name
 git remote -v   // to conform above commands
 
 git add Readme.txt        // add particular file to git attention, create snapshots
-git commit -m “Add Readme.txt”  // commit by adding message (create checks points)
+git add Readme.txt contributing.md // add two files or more
+git add *.c               // all files ends with c
+git add .                 // add all files
+git commit -m “message here”  // commit by adding message (create checks points)
 
-git add .	// add all files
-git commit -m "message"
 
 git push origin branchname	// push to specific branch
 
@@ -45,7 +86,79 @@ git checkout branchname		// to navigate another branchname
 
 git checkout -- <file>		// to undo changes
 
-git log --pretty=oneline	// produces logs in one line
+/**
+	to commits history 
+**/
+git log -2 // recents two commits.
+git log -p -2 // recents two commits with modifications in those files
+git log -2 --stat // recents two commands with files names and number of lines modified
+git log -2 --pretty=oneline	// recents two commits in one lines
+// more options in --pretty
+git log -2 --pretty=short	
+git log -2 --pretty=full
+git log -2 --pretty=fuller
+
+git log --pretty=format:"%H %ae"
+
+Option 	Description of Output
+%H 		Commit hash
+%h 		Abbreviated commit hash
+%T 		Tree hash
+%t 		Abbreviated tree hash
+%P 		Parent hashes
+%p 		Abbreviated parent hashes
+%an 	Author name
+%ae 	Author email
+%ad 	Author date (format respects the --date=option)
+%ar 	Author date, relative
+%cn 	Committer name
+%ce 	Committer email
+%cd 	Committer date
+%cr 	Committer date, relative
+%s 		Subject
+
+git log --pretty=format:"%h %s" --graph // shows nice ASCII graph
+
+Option 			Description
+-p 				Show the patch introduced with each commit.
+--stat 			Show statistics for files modified in each commit.
+--shortstat 	Display only the changed/insertions/deletions line from the command.
+
+--name-only 	Show the list of files modified after the commit information.
+--name-status 	Show the list of files affected with added/modified/deleted
+				information as well.
+
+--abbrev-commit Show only the first few characters of the SHA-1 checksum instead of all 40.
+				
+--relative-date Display the date in a relative format (for example, “2 weeks ago”)
+				 instead of using the full date format.
+
+--graph 		Display an ASCII graph of the branch and merge history be-
+				side the log output.
+--pretty 		Show commits in an alternate format. Options include one-
+				line, short, full, fuller, and format (where you specify your
+				own format).
+// limit log output
+git log --since=2.weeks  // weeks, months, years, days
+git log --until=2.weeks
+
+git log --author="ranjan" -2
+
+Option 		Description
+-(n) 		Show only the last n commits
+--since
+--after 	Limit the commits to those made after the specified date.
+--until
+--before 	Limit the commits to those made before the specified date.
+--author 	Only show commits in which the author entry matches the specified string.
+--committer Only show commits in which the committer entry matches the specified string.
+--grep 		Only show commits with a commit message containing the string
+-S 			Only show commits adding or removing code matching the string
+
+git log --oneline --decorate --graph --all
+// shows commits of remote branch which are not in local branch
+git log --no-merges <local_branch>..origin/<remote_branch>
+
 git log --pretty=oneline --max-count=2
 git log --pretty=oneline --since='5 minutes ago'
 git log --pretty=oneline --until='5 minutes ago'
@@ -66,16 +179,34 @@ Let’s look at it in detail:
 --graph tells git to display the commit tree in the form of an ASCII graph layout
 --date=short keeps the date format short and nice
 
+
+// Correct the last message(Subject) 
+git commit --amend
+// if you have committed, and forgot to add few files and want to make same commit.
+git add forgotten_file
+git commit --amend
+
+
+git branch  // list all branches with current branch
+git branch -v // list all branches with current branch and last commits
+
+git branch --merged // list all branches which are merged to current branch
+git branch --no-merged // list all branches which are not merged to current branch
+
+git branch -d <branch_name>  // to delete allready merged branch
+git branch -D <branch_name>  // to delete un-merged branch and lose their work.
+
+git diff --check  // identifies possible whitespace errors
+
 git checkout <hash>		// get latest updates from repo
 * 911e8c9 2011-03-09 | First Commit [Alexander Shvets]
 
-	if u wanted undo changes
-git status
+//	if you wanted undo changes or modification before stage(add)
 git checkout filename
+git checkout .   // for all changes in all files
 
-	if u add particular file and unstage it
-git add file.html
-git reset head file.html
+// if you add particular file and want to unstage(un-add) it.
+git reset HEAD file.html
 
 	if u discard changes in previous commit
 git revert head --no-edit
@@ -95,8 +226,6 @@ git checkout -b branchname
 	switch to another branch
 git checkout existingBranchName
 
-
-git log
 
 	to see difference between last commit and unstaged data (before add)
 git diff
@@ -192,3 +321,27 @@ git rebase ==============>do following changes
 if conflicts occur solve conflict
 git rebase --continue
 
+
+ 
+ 1. first to branch where you want to revert.
+ git pull origin branchName
+
+ git revert -m 1 commitID
+
+ git push origin branchName
+
+
+ //After adding and committing but not push. You want to unadd.
+ 1. git reset HEAD <file_name> 
+		or
+ 2. git reset --soft HEAD~
+
+ // Reset Modified file (not staged yet)
+ 1. git checkout <file_name>
+		or
+ 2. git checkout .  // all modified files
+
+
+git reset --head origin/current_branch_name
+
+// 
