@@ -58,10 +58,12 @@ git commit -m “message here”  // commit by adding message (create checks poi
 
 
 // create new branch and move to it.
-git branch branch_name			// to create branch
-git checkout branch_name		// to navigate another branchname
+1. git branch <branch_name>			// to create branch
+   git checkout <branch_name>		// to navigate another branchname
 		or
-git checkout -b branch_name
+2. git checkout -b <branch_name>
+
+3. git checkout -b <branch_name> master^   // create new branch with second last commit of master branch
 
 
 /**
@@ -151,7 +153,7 @@ git checkout <branch_name> // move to branch where you add the commit
 git cherry-pick d467740
 git cherry-pick d467740 de906d4  // add more cherry picks in one go
 // if cherry picks get halted, then resolve the conflicts, run your code
-git cherry-pick --continue // then run continue command and add more cherry picks
+git cherry-pick --continue // then run continue command and add more cherry picks. --continue adds modified files
 // for any resolved conflicts. 
 git add <file_name>
 git commit -m "message"
@@ -203,6 +205,54 @@ git checkout .   		// for all changes in all files
 git reset HEAD <file_name>   // particular file
 git reset --soft HEAD~      // for all changes in all files
 
+git reset --hard HEAD^   // undo last commit and all changes, HEAD^ -> second last commit
+git reset --hard head^^  // undo last 2 commits
+git reset --hard HEAD  	// apply in between merge and undo the merge
+git reset --hard ORIG_HEAD // if merge commit created and to undo merge. Here ORIG_HEAD stores previous head
+							// head stores merge commit.
+git reset --hard origin/<current_branch_name>
+git reset --hard HEAD@{2}
+
+git reset option effects
+----------------------------------------------------------
+Option 		HEAD 	Index	Working directory
+--soft 		Yes
+--mixed 	Yes 	Yes
+--hard 		Yes 	Yes		Yes
+
+git reflog  // shows following output
+f48bb36... HEAD@{0}: commit: Which commit parent?
+7ecdc78... HEAD@{1}: dev: updating HEAD
+e719b1f... HEAD@{2}: checkout: moving from dev to master
+7ecdc78... HEAD@{3}: commit: Add dev_file to dev branch
+e719b1f... HEAD@{4}: checkout: moving from master to dev
+
+
+Mystifies ^ and ~
+-------------------------------------------------------------
+G   H   I   J
+ \ /     \ /
+  D   E   F
+   \  |  / \
+    \ | /   |
+     \|/    |
+      B     C
+       \   /
+        \ /
+         A
+
+A =      = A^0
+B = A^   = A^1     = A~1
+C = A^2  = A^2
+D = A^^  = A^1^1   = A~2
+E = B^2  = A^^2
+F = B^3  = A^^3
+G = A^^^ = A^1^1^1 = A~3
+H = D^2  = B^^2    = A^^^2  = A~2^2
+I = F^   = B^3^    = A^^3^
+J = F^2  = B^3^2   = A^^3^2
+
+
  	// revert particular commit.
  git pull origin <branch_name>
  git revert -m 1 <commit_id>
@@ -214,18 +264,7 @@ git reset --soft HEAD~      // for all changes in all files
 	if u discard changes in previous commit
 git revert head --no-edit
 
-	to undoing commit
-git reset --soft HEAD^
-
-
-	if u horribly wrong, want to undo last commit and all changes
-git reset --hard HEAD^
-	want to undo last 2 commits
-git reset --hard head^^
-
-
-git reset --head origin/current_branch_name
-
+	
 git pull origin staging --allow-unrelated-histories
 
 git pull origin branchname --allow-unrelated-histories
