@@ -269,6 +269,9 @@ git pull origin staging --allow-unrelated-histories
 
 git pull origin branchname --allow-unrelated-histories
 
+	// push your changes forcefully
+git push --force origin <branch_name>
+
 
 ========================== tags
 a tag is reference to commit used mostly for release versioning
