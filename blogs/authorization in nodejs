@@ -1,0 +1,198 @@
+Authentication and authorization are very important part in any application.
+It secures web application from malicious user from getting access to the application.
+
+Authentication means validating username and password of the user means only the correct or valid
+user can enter the application. He is recognized user of the system.
+His password is authenticated against the username and found it is a valid user.
+
+Authorizations means if user is authenticated whether he has rights to access a certain
+resource in an application. eg Admins are often have rights to access confidential informations of all 
+or many users in an applications.
+But in a user can't have access to another user's confidential informations. We have to provide some mechanisms
+to restrict the access to certain users.
+
+Case 1: Authentication
+Validating password against username and provide provide JWT token to the users to access certain resource.
+
+case i: User login method that validates the password using bcrypt and create JWT tokens and send the header or
+body of response.
+
+
+Run following commands to install lodash and bcrypt node modules.
+npm install lodash
+npm install bcrypt
+
+// Code for user login. File name userService.js
+const {User} = require('../../model/index');
+const _ = require('lodash');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+
+/**
+ * Login method for user and on success provides JWT token
+ * 
+ * @param {Object} req 
+ * @param {Object} res 
+ */
+async function userLogin(req, res) {
+    let data = req.body;
+	// fetching email and password using lodash methods
+    data = _.pick(data, ['email', 'password']);
+
+    let user = await User.findOne({email: data.email});
+    if(!user){
+        return res.status(400).send('Email is not registered');
+    }
+
+	//comparing user provided password against hash of password saved in mongodb
+    const validPassword = await bcrypt.compare(data.password, user.password);
+
+    if(!validPassword){
+        return res.status(400).send('Please enter correct password');
+    }
+
+	// method in user schema to generate JWT authtoken
+	// code is provided in below segment.
+    const token = user.generateAuthToken();
+
+	// sending token in header as well as in body of response.
+    return res.header('x-auth-token', token).status(200).send({token: token});
+}
+
+Run following command to install mongoose and JWT
+npm install mongoose
+npm install jsonwebtoken
+
+// User schema and model. File name user.js
+
+const mongoose = require('mongoose');
+const environment = require('../../configuration/environment');
+const jwt = require('jsonwebtoken');
+
+const schema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        minlength: 1,
+        maxlength: 255,
+        trim: true,
+        lowercase: true
+    },
+    email: {
+        type: String,
+        required: true,
+        lowercase: true,
+        unique: true,
+        match: /.*@.*/
+    },
+    password: {
+        type: String,
+        minlength: 5,
+        maxlength: 1024
+    },
+    isAdmin: Boolean
+});
+
+// method to generate auth token for user schema used in above code.
+schema.methods.generateAuthToken = function(){
+    return jwt.sign({_id: this._id, isAdmin: this.isAdmin },
+        'secret_key',  // this secret key or you can import from environment variables
+         { expiresIn: 300 }); // 300 seconds for JWT to get expired
+}
+const User = mongoose.model('User', schema);
+module.exports = User;
+
+
+{_id: this._id, isAdmin: this.isAdmin } is payload for creating JWT
+eg {_id:49243234h3fewewwefew, isAdmin: true} for user.
+
+
+Case 2: Authorization
+Verifing whether logged user have access rights like admin to access some resource.
+We use middle functions to restrict route handlers.
+
+First create middleware named folder to encapsulate these type of functions.
+
+// authorization.js
+const jwt = require('jsonwebtoken');
+const environment = require('../configuration/environment');
+
+/**
+ * Middle function to authenticate private URLs by checking
+ * token are valid or not.
+ * 
+ * @param {Object} req - The Request Object
+ * @param {Object} res - The Response Object
+ * @param {Object} next - The next middleware in request processing chain
+ */
+function authorization (req, res, next) {
+	// extract JWT token from request header
+    const token = req.header('x-auth-token');
+    if(!token)
+        return res.status(401).send('Access denied. Token not found');
+
+    	// validate token using JWT verify method, notice that 'secret_key' is same as above.
+    jwt.verify(token, 'secret_key', function (err, decoded) {
+        if(err){
+            return res.status(401).send('Access denied. Invalid token');
+        }
+    
+	// if token is verifed then decode is copied to user field of req object.
+	// calling to next move next middleware in request processing pipeline.
+        req.user = decoded;
+        next();
+    });
+}
+
+/**
+ * Middle ware function to authenticate whether user is admin or not.
+ * 
+ * @param {Object} req - The Request Object
+ * @param {Object} res - The Response Object
+ * @param {Object} next - The next middleware in request processing chain
+ */
+function adminAutorization(req, res, next) {
+	// receives user object in req from previous or above method
+	// moves to next middleware or request handler if user is admin.
+    if (req.user && req.user.isAdmin){
+        next();
+    }else{
+        return res.status(403).send('Access Denied');
+    }
+}
+
+module.exports.authorization = authorization;
+module.exports.admin = adminAutorization;
+
+
+Decoded object contains 
+{
+  "_id": "5c7cd7fdaa702d275ce102ad",
+  "iat": 1551697335,
+  "exp": 1551697635,
+  "isAdmin": true
+}
+
+
+// Route user.js
+
+const express = require('express');
+const router = express.Router();
+
+// This is destructuring of Object from authorization.js mentioned above.
+const {authorization, admin} = require('../middleware/authorization');
+
+/**
+ * Get blogs
+ */
+router.get('/blog', [authorization, admin], function (req, res) {
+   return res.status(200).send('Success');
+});
+
+See the [authorization, admin].
+First authorization middleware is processed whether request header has valid token or not.
+If valid then payload or decoded in copied in user field of req object.
+
+Second admin middleware is processed whether isAdmin field of user of req object is true or not.
+if true only then route handling method, in this case Success response come.

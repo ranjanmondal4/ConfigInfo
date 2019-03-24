@@ -1,0 +1,106 @@
+
+For the first time nothing perfect or correct. The new Application's database schema is not an exception. It will change or bound to change over the time when you will try to add new requirements or features to your applications.
+
+Flyway is a tool or mechanism to let you versioning control with respect to incrementatl changes to the databases. It will help you migrate to new version very easily and confidently.
+
+In this blog, we will see how to use Flyway mechanism in Spring Boot Application to manage modification in our databases.
+
+We will deploy a simple and easy Spring Boot application with Spring Data JPA and MySQL databases and integrate Flyway in the applications
+
+Whenever we develop a project. when a new requirement or new features come to an application we need to change existing domain and also their value as per new requirement.
+
+To fix these issue
+
+There is a tool for changes in a database table with version control of previous SQL script. it is called as Flyway tool.
+
+Flyway is a tool to manage changes to your table in spring boot application.
+
+Required dependency for Flyway:-
+
+<dependency>
+ <groupId>org.flywaydb</groupId>
+ <artifactId>flyway-core</artifactId>
+</dependency>
+ 
+
+Adding a Domain Entity Employee
+Let’s add an Entity in our application that will help us to create and test flyway migration for Employee Entity.
+
+First of all, Add a new package called domain inside com.demo package. Then add the following Employee.java file inside com.demo.domain
+package
+
+
+@Entity
+public class Employee {
+ @Id
+ @GeneratedValue(strategy = GenerationType.IDENTITY)
+ private Long id;
+
+ private String name;
+
+ private String email;
+
+ public Long getId() {
+ return id;
+ }
+
+ public void setId(Long id) {
+ this.id = id;
+ }
+
+ public String getName() {
+ return username;
+ }
+
+ public void setName(String username) {
+ this.username = username;
+ }
+
+ public String getEmail() {
+ return email;
+ }
+
+ public void setEmail(String email) {
+ this.email = email;
+ }
+
+}
+
+Creating a Flyway Migration script
+
+By Default, Flyway read sql script from classpath:db/migration folder.
+
+All database scripts to follow a naming convention like --> V<VERSION_NUMBER>__<NAME>.sql
+
+Now, creating a new file name V1__newTable.sql inside src/main/resources/db/migration directory and add the following SQL scripts -
+
+CREATE TABLE employee (
+ id bigint(20) NOT NULL AUTO_INCREMENT,
+ name varchar(255),
+ email varchar(255),
+ PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+When it runs the migration, being the first time, it creates a table called flyway_schema_history and stores all the meta-data required for versioning the migrations in this table.
+
+The current migration’s version get stored,the script file name and checksum among other details are stored too in the table.
+
+When the application runs, It first validates the already applied migration scripts by  calculation of their checksum and matches it with the checksum already stored in the meta-data table.
+
+
+
+We can add multiple SQL scripts to run on our server based on our requirement.
+
+Create a new script V2_newEmployee.sql inside src/main/resources/db/migration with the following contents -
+
+INSERT INTO employee(name, email) VALUES('John', 'john@yahoo.in');
+INSERT INTO employee(name, email) VALUES('Rock', 'rock@gmail.com');
+
+run application:- 
+mvn spring-boot:run
+
+Have a look, flyway_schema_history will hava two entry for sql script migration.
+
+I hope, this will be helpful.
+

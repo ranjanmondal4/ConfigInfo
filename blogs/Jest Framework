@@ -1,0 +1,268 @@
+
+First install Jest Framework
+
+npm install jest --save-dev
+
+in package.json, add test
+
+"scripts": {
+    "test": "jest"
+  },
+
+create folder utility
+ create lib.js
+
+Create test folder.
+
+create lib.test.js
+
+add content
+const lib = require('../utility/lib');
+
+test('absolute - should return positive if input is positive', () => {
+    const result = lib.isAbsolute(1);
+    expect(result).toBe(1);
+});
+
+
+test('absolute - should return positive if input is negative', () => {
+    const result = lib.isAbsolute(-1);
+    expect(result).toBe(1);
+});
+
+
+test('absolute - should return positive if input is 0', () => {
+    const result = lib.isAbsolute(0);
+    expect(result).toBe(0);
+});
+
+
+npm jest
+
+output:
+
+> jest
+
+ PASS  test/lib.test.js
+  ✓ absolute - should return positive if input is positive (5ms)
+  ✓ absolute - should return positive if input is negative
+  ✓ absolute - should return positive if input is 0 (1ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       3 passed, 3 total
+Snapshots:   0 total
+Time:        1.883s, estimated 2s
+Ran all test suites.
+
+
+You can group above test using describe and it functions.
+
+describe('absolute - ', () => {
+    it('should return positive if input is positive', () => {
+        const result = lib.isAbsolute(1);
+        expect(result).toBe(1);
+    });
+
+
+    it('should return positive if input is negative', () => {
+        const result = lib.isAbsolute(-1);
+        expect(result).toBe(1);
+    });
+
+
+    it('should return positive if input is 0', () => {
+        const result = lib.isAbsolute(0);
+        expect(result).toBe(0);
+    });
+});
+
+
+For Strings 
+in lib.js
+
+function greet(name) {
+    return `Welcome ${name} !!`;
+}
+
+module.exports.greet = greet;
+
+in lib.test.js
+describe('greet', () => {
+    it('should return greeting message', () => {
+        const result = lib.greet('Mosh');
+        //expect(result).toBe('Welcome Mosh');
+        expect(result).toMatch(/Mosh/);
+        expect(result).toContain('Mosh');
+    });
+});
+
+Use toMatch where you can pattern eg /Mosh/
+
+or use toContain where you can add text directly.
+
+toBe matches the exact text which often breaks for string.
+
+
+For Arrays
+
+in lib.js
+function getCurrency() {
+    return ['USD', 'INR', 'EURO'];
+}
+
+module.exports.isAbsolute = isAbsolute;
+module.exports.greet = greet;
+module.exports.getCurrency = getCurrency;
+in lib.test.js
+
+describe('getCurrency', () => {
+    it('should return list of currency', () => {
+        const result = lib.getCurrency();
+        expect(result).toEqual(expect.arrayContaining(['INR', 'USD', 'EURO']))
+    });
+});
+
+output:
+
+ PASS  test/lib.test.js
+  getCurrency
+    ✓ should return list of currency (6ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        2.016s
+Ran all test suites.
+
+For Objects
+
+in lib.test.js
+describe('getProduct', () => {
+    it('should return details of product', () => {
+        const result = lib.getProduct(1);
+        expect(result).toEqual({id: 1, price: 10});
+	expect(result).toMatchObject({id: 1, price: 10});
+    });
+});
+
+in lib.js
+
+function getProduct(id) {
+    return {id: id, price: 10};
+}
+
+module.exports.getProduct = getProduct;
+
+output:
+
+PASS  test/lib.test.js
+  getProduct
+    ✓ should return details of product (7ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        1.846s, estimated 2s
+Ran all test suites.
+
+
+For Exceptions
+
+in lib.js
+function registerUser (userName){
+    if(!userName)
+        throw new Error('User name is required');
+
+    return {id: new Date().getTime(), userName: userName};
+}
+module.exports.registerUser = registerUser;
+
+
+in lib.test.js
+describe('registerUser', () => {
+    const args = [null, undefined, '', 0, false, NaN];
+    args.forEach((arg) => {
+        it('should return error if user name is falsy', () => {
+            expect(() => { lib.registerUser(arg)}).toThrow();
+        });
+    });
+
+    it('should return user object if valid user name is passed', () => {
+        const result = lib.registerUser('Mosh');
+        expect(result).toMatchObject({userName: 'Mosh'});
+        expect(result.id).toBeGreaterThan(0);
+    });
+});
+
+
+output:
+ PASS  test/lib.test.js
+  registerUser
+    ✓ should return error if user name is falsy (9ms)
+    ✓ should return error if user name is falsy (1ms)
+    ✓ should return error if user name is falsy (1ms)
+    ✓ should return error if user name is falsy (1ms)
+    ✓ should return error if user name is falsy (1ms)
+    ✓ should return error if user name is falsy (1ms)
+    ✓ should return user object if valid user name is passed (3ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       7 passed, 7 total
+Snapshots:   0 total
+Time:        1.89s, estimated 2s
+Ran all test suites.
+
+
+describe('get result', () => {
+    it('should return null', () => {
+
+        const n = null;
+        expect(n).toBeNull();
+        expect(n).toBeDefined();
+        expect(n).not.toBeUndefined();
+        expect(n).not.toBeTruthy();
+        expect(n).toBeFalsy();
+
+        // const result = lib.getResult(2, 4);
+        // expect(result).toBe(6);
+    });
+});
+
+toBeNull()  return true if result null.
+toBeDefined()	return true if result which is not undefined.
+not.toBeDefined() return true if result is undefined.
+toBeTruthy()	return true if result is truty.
+toBeFalsy	return true if result is falsy.
+
+
+  expect(value).toBeGreaterThan(3);
+  expect(value).toBeGreaterThanOrEqual(3.5);
+  expect(value).toBeLessThan(5);
+  expect(value).toBeLessThanOrEqual(4.5);
+
+toBeGreaterThan(3) return true if value is greator than 3.
+toBeGreaterThanOrEqual(3.5) return true if value is greator and equal to 3.5
+toBeLessThan(5) return true if value is less than 5
+toBeLessThanOrEqual(4.5) true if value is less than 4.5
+
+ // toBe and toEqual are equivalent for numbers
+  expect(value).toBe(4);
+  expect(value).toEqual(4);
+	
+User toEqual() for Objects.
+
+
+use toBeCloseTo instead of toEqual, because you don't want a test to depend on a tiny rounding error.
+
+test('adding floating point numbers', () => {
+  const value = 0.1 + 0.2;
+  //expect(value).toBe(0.3);           This won't work because of rounding error
+  expect(value).toBeCloseTo(0.3); // This works.
+});
+
+Black Mirror,
+The last kingdom
+The Crown
+MindHunter
+You
+Peaky blinders

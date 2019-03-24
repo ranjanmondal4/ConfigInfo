@@ -1,0 +1,62 @@
+
+Handling of errors correctly in APIs with providing meaningful exceptions messages are very helpful for Client as well as for developers. They can help to respond to issues immediately. By defualt java application returns stack trace of exceptions which are sometimes hard to understand.
+Categorizing the error information into groups helps developers or client to understand it clearly. In this blog, we will see how to write an efficient error handling mechanism in Spring boot. 
+
+
+In any application, we need to write code for handling exceptions. And sometimes we add same code for every controller and service to handle exceptions. If we need to change exceptions handling code then we need to modify every occurrence of that code.
+
+From Spring 3.2, we can have a mechanism to handle this scenario. We can write one global exception handling code to cater to all needs of handling all exceptions in the applications.
+
+This annotation automatically applies to all classes that use @Controller or @RestController.
+
+With Spring 5 brings the class named ResponseStatusException. It is very efficient way for handling exception in REST Apis.
+
+They have one thing in common - They all deal with the separation of concerns to great extent. The application usually throw exception for failure in the flow (exceptions) which are handled separately.
+
+
+Step 1:
+
+Generate a new class which will extends from ResponseEntityExceptionHandler and add following code to it.
+Don't forget to add @ControllerAdvice on it.
+
+
+@Order(Ordered.HIGHEST_PRECEDENCE)
+@ControllerAdvice
+public class MyGlobalExceptionHandler extends ResponseEntityExceptionHandler {
+ 
+  @ExceptionHandler(NullPointerException.class)
+  public ResponseEntity <vnderrors> notFoundException(final NullPointerException e) {
+    return error(e, HttpStatus.NOT_FOUND, e.getId().toString());
+  }
+ 
+  private ResponseEntity<Object> error(
+      final Exception e, final HttpStatus status, final String remarks) {
+    final String message =
+        Optional.of(e.getMessage()).orElse(e.getClass().getSimpleName());
+    return new ResponseEntity<>(new VndErrors(remarks, message), httpStatus);
+  }
+ 
+  @ExceptionHandler(ArrayIndexOutOfBoundsException.class)
+  public ResponseEntity<vnderrors> assertionException(final ArrayIndexOutOfBoundsException e) {
+    return error(e, HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+  }
+}
+
+
+Using @ControllerAdvice with @ExceptionHandler helps us by providing global and common error handling mechanism. It avoids duplicacy of code.
+If you want @ControllerAdvide to work some classes not all. You can follow some of following mechanism.
+
+@ControllerAdvice("com.belfrics.controller")
+@ControllerAdvice(value = "com.belfrics.controller")
+@ControllerAdvice(basePackages = "com.belfrics.controller")
+
+The above mechanism is very simple and very flexible too.
+
+It gives us:
+
+provide absolute control over the response body as well as the status code.
+provide mapping of one or more exceptions on the same method for being handled together.
+It makes efficient use of the newer RESTful ResposeEntity.
+Always keep in mind is to match the exceptions written with @ExceptionHandler with the exception used in the argument of the method.
+If bothe don’t match, the compiler will not complain and Spring will not complain either too.
+

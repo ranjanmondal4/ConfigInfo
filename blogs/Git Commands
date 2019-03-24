@@ -1,0 +1,237 @@
+
+Git is a version control system designed to handle everything from small and large projects with speed and efficiency.
+It is free and open source distributed.
+
+Git is very easy to learn. It has a very small footprint and lightning fast performance.
+It outclasses other tools like Subversion, CVS with cheap local branching and multiple workflows.
+
+
+Git is very usefull in following cases
+Accidental deletion of the code, git can help to get back your code.
+Accidental modification of the code or broke something, it help you to revert it.
+It lets you share and exchange your code with other developers  very easily.
+Need to know what recent changes you made to source code, git is friend to you.
+It lets you backup your source code to a remote server.
+
+Installation process of git
+Run follwoing command inside application folder, it will create .git folder inside application.
+Now you can start tracking version of your application.
+	
+git init 
+
+// clones repo from GitHub
+git clone https://github.com/libgit2/libgit2   
+
+// clones repo with folder name mylib
+git clone https://github.com/libgit2/libgit2 mylib  
+ 
+// shows status means untracked, modified and deleted files and the current branch
+git status 
+// s for short, display short descriptions
+git status -s 
+
+output:
+M README    		Modified file not staged yet.
+MM Rakefile   		Modified and staged and then modified  
+A lib/git.rb   		Staged (added)
+?? LICENSE.txt  	Untracked File
+ 
+
+For ignoring files to be added in Git. Create .gitignore file    
+add files and paths of files
+
+cat .gitignore  
+git add .gitignore
+git commit -m "Adding gitignore"
+ 
+ 
+// to remove file from stag and working directory
+git rm file_name
+git commit -m "message-here"
+ 
+if file is modified, then staged. and you want to remove
+f for force removal
+git rm -f file_name  
+git commit -m "message-here"
+ 
+
+// renaming file in git.
+git mv file_from file_to  
+// this is similar to following commands
+mv file_from file_to
+git rm file_from
+git add file_to
+ 
+ 
+//  give URL of the online repo, an origin is a nickname, u can give any name
+git remote add origin https://github.com/username/myproject.git
+// to confirm above commands
+git remote -v
+ 
+
+// add particular file to git attention, create snapshots
+git add Readme.txt
+// add two files or more
+git add Readme.txt contributing.md 
+// all files ends with c
+git add *.c
+// add all files
+git add .                 
+// commit by adding message (create checks points)
+git commit -m “message here”  
+ 
+ 
+create new branch and move to it.
+to create branch
+1. git branch <branch_name> 
+to navigate another branchname
+   git checkout <branch_name> 
+or
+2. git checkout -b <branch_name>
+ 
+// create new branch with second last commit of master branch
+3. git checkout -b <branch_name> master^   
+ 
+ 
+Display Commits history 
+recents two commits.
+git log -2 
+// recents two commits with modifications in those files
+git log -p -2 
+// recents two commands with files names and number of lines modified
+git log -2 --stat 
+// recents two commits in one lines
+git log -2 --pretty=oneline
+ 
+// more options in --pretty
+git log -2 --pretty=short 
+git log -2 --pretty=full
+git log -2 --pretty=fuller
+ 
+git log --pretty=format:"%H %ae"
+ 
+Option  Description of Output
+%H  Commit hash
+%h  Abbreviated commit hash
+%T  Tree hash
+%t  Abbreviated tree hash
+%P  Parent hashes
+%p  Abbreviated parent hashes
+%an  Author name
+%ae  Author email
+%ad  Author-date (format respects the --date=option)
+%ar  Author-date, relative
+%cn  Committer name
+%ce  Committer email
+%cd  Committer date
+%cr  Committer date, relative
+%s  Subject
+ 
+shows nice ASCII graph
+git log --pretty=format:"%h %s" --graph 
+ 
+limit log output
+weeks, months, years, days
+git log --since=2.weeks  
+git log --until=2.weeks
+git log --pretty=oneline --since='5 minutes ago'
+git log --pretty=oneline --until='5 minutes ago'
+ 
+git log --pretty=oneline --author=<author_name>
+git log --author=<author_name> -2
+ 
+ 
+git log --oneline --decorate --graph --all
+shows commits of remote branch which are not in local branch
+git log --no-merges <local_branch>..origin/<remote_branch>
+ 
+ 
+ 
+cherry pick - add commits from one branch to another.
+move to branch where you add the commit
+git checkout <branch_name> 
+git cherry-pick d467740
+ // add more cherry picks in one go
+git cherry-pick d467740 de906d4 
+if cherry picks get halted, then resolve the conflicts, run your code
+then run continue command and add more cherry picks. --continue adds modified files
+git cherry-pick --continue 
+// for any resolved conflicts. 
+git add <file_name>
+git commit -m "message"
+// after that successful cherry picks
+git push origin <branch_name>
+ 
+// abort cherry pick in middle of process
+git cherry-pick --abort
+to cherry pick merge instead of commit
+and push the changes
+git cherry-pick -m 1 <hash>   
+ 
+// Modify the last message(Subject) 
+//  modify last commit message 
+git commit --amend       
+ 
+// if you have committed, and forgot to add few files and want to make same commit.
+git add <forgotten_file>   
+git commit --amend
+     or
+git commit --amend -m "modify last commit message"
+ 
+ 
+Listing branches
+list all branches with current branch
+git branch   
+// list all branches with current branch and last commits
+git branch -v 
+// list all remote branches 
+git branch -r 
+// to see all remote and local branches and which are out of date
+git remote show origin   
+ 
+// list all branches which are merged to current branch
+git branch --merged 
+// list all branches which are not merged to current branch
+git branch --no-merged 
+ 
+ 
+Delete branch
+to delete allready merged branch
+git branch -d <branch_name>  
+// to delete un-merged branch and lose their work.
+git branch -D <branch_name>  
+ 
+ 
+Diff commands
+identifies possible whitespace errors
+git diff --check  
+// to see the difference between last commit and unstaged data (before add)
+git diff
+// to see the difference between the last commit and staged data (after add)          
+git diff --staged 
+// show modified contents in the specific file before the stage.
+git diff file_name 
+ 
+ 
+ 
+Undo changes or modification before stage(add)
+particular file
+git checkout <file_name>   
+// for all changes in all files
+git checkout .    
+ 
+Undo changes or modification after stage(add) means unstage(un-add)
+particular file
+git reset HEAD <file_name>
+// for all changes in all files   
+git reset --soft HEAD~      
+ 
+// undo last commit and all changes, HEAD^ -> second last commit
+git reset --hard HEAD^  
+// apply in between merge and undo the merge 
+git reset --hard HEAD   
+// if merge commits created and to undo merge. Here ORIG_HEAD stores previous head
+git reset --hard ORIG_HEAD 
+// head stores merge commit.
+git reset --hard origin/<current_branch_name>
+git reset --hard HEAD@{2}
