@@ -1,0 +1,284 @@
+install kafka Prefer first
+https://kafka.apache.org/quickstart
+
+For second
+https://datasciencenovice.wordpress.com/2016/07/04/installing-kafka-spark-on-ubuntu-14-04-16-04-lts/
+
+
+
+In spring boot
+https://www.codenotfound.com/spring-kafka-consumer-producer-example.html
+http://www.baeldung.com/spring-kafka
+
+youtube links
+https://www.youtube.com/watch?v=twvdT6A1eeE&list=PLkz1SCf5iB4enAR00Z46JwY9GGkaS2NON&index=10
+
+
+
+Zookeeper
+to start 
+sudo zookeeper-server-start /etc/kafka/zookeeper.properties
+or 
+sudo service zookeeper start
+
+to stop
+sudo service zookeeper stop
+
+kafka
+
+to start
+sudo kafka-server-start /etc/kafka/server.properties
+
+to stop
+ctrl + c
+
+to start producer
+ kafka-console-producer --broker-list localhost:9092 --topic test
+
+ kafka-console-producer --list --zookeeper localhost:9092
+
+ create topic test
+ Enter any message
+
+
+to stop producer
+ ctrl + c
+
+to start consumer
+
+kafka-console-consumer --zookeeper localhost:2181 --topic test --from-beginning
+subscribe consumer topic test  receives message from beginning
+
+to stop consumer
+ ctrl + c
+
+
+Topic management tool.
+bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic TestTopicXYZ
+
+
+  Blogs
+
+
+Kafka messaging tool provides abstraction for sending messages. With message driven POJOS  and @KafkaListener it provides support for desired functionalities.
+1. First add two dependencies in pom.xml
+
+<dependency>
+      <groupId>org.springframework.kafka</groupId>
+      <artifactId>spring-kafka</artifactId>
+      <version>${spring-kafka.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.kafka</groupId>
+      <artifactId>spring-kafka-test</artifactId>
+      <version>${spring-kafka.version}</version>
+      <scope>test</scope>
+  </dependency>
+
+2. Add following configuration in application.properties
+#kafka setting
+spring.kafka.consumer.group-id=kafka-intro
+spring.kafka.bootstrap-servers=localhost:9092
+spring.kafka.topic.test=test
+
+3. Add Sender Configuration file with following code
+@Component
+public class SenderConfig {
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
+
+    @Bean
+    public Map<String, Object> producerConfigs() {
+        Map<String, Object> props = new HashMap<>();
+        // list of host:port pairs used for establishing the initial connections to the Kakfa cluster
+        props.put(org.apache.kafka.clients.producer.ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
+                bootstrapServers);
+        props.put(org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+                StringSerializer.class);
+        props.put(org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+                StringSerializer.class);
+
+        return props;
+    }
+
+    @Bean
+    public ProducerFactory<String, String> producerFactory() {
+        return new DefaultKafkaProducerFactory<>(producerConfigs());
+    }
+
+    @Bean
+    public KafkaTemplate<String, String> kafkaTemplate() {
+        return new KafkaTemplate<>(producerFactory());
+    }
+
+    @Bean
+    public Sender sender() {
+        return new Sender();
+    }
+}
+
+
+4. Add Receiver configuration file following code
+
+@Configuration
+@EnableKafka
+public class ReceiverConfig {
+
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
+
+    @Bean
+    public Map<String, Object> consumerConfigs() {
+        Map<String, Object> props = new HashMap<>();
+        // list of host:port pairs used for establishing the initial connections to the Kafka cluster
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
+                bootstrapServers);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
+                StringDeserializer.class);
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
+                StringDeserializer.class);
+        // allows a pool of processes to divide the work of consuming and processing records
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "kafka-intro");
+        // automatically reset the offset to the earliest offset
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+
+        return props;
+    }
+
+    @Bean
+    public ConsumerFactory<String, String> consumerFactory() {
+        return new DefaultKafkaConsumerFactory<>(consumerConfigs());
+    }
+
+    @Bean
+    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, String> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory());
+
+        return factory;
+    }
+
+    @Bean
+    public Receiver receiver() {
+        return new Receiver();
+    }
+}
+
+
+5. Add Sender POJO class
+
+public class Sender {
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(Sender.class);
+
+    @Autowired
+    private KafkaTemplate<String, String> kafkaTemplate;
+
+    public void send(String topic, String payload) {
+        LOGGER.info("sending payload = {} to topic = {}", payload, topic);
+        kafkaTemplate.send(topic, payload);
+    }
+}
+
+
+6. Add Receiver POJO class
+
+public class Receiver {
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(Receiver.class);
+
+    private CountDownLatch latch = new CountDownLatch(1);
+
+    public CountDownLatch getLatch() {
+        return latch;
+    }
+
+    @KafkaListener(topics = "${spring.kafka.topic.test}")
+    public void receive(String payload) {
+        LOGGER.info("received payload = {}", payload);
+        latch.countDown();
+    }
+}
+
+7. Following Kafka Service method which will be called by Controller.
+@Service
+public class KafkaService {
+
+    private static final String TEST_TOPIC = "test";
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
+
+    /*@ClassRule
+    public static KafkaEmbedded embeddedKafka =
+            new KafkaEmbedded(1, true, HELLOWORLD_TOPIC);*/
+
+    @Autowired
+    private Receiver receiver;
+
+    @Autowired
+    private Sender sender;
+
+    public void testReceive(){
+        try {
+            sender.send(TEST_TOPIC, "Hello Spring Kafka!");
+            receiver.getLatch().await(10000, TimeUnit.MILLISECONDS);
+        }catch(Exception e){
+
+        }
+    }
+}
+
+8. Kafka controller
+
+@RestController
+public class KafkaController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(KafkaController.class);
+
+    @Autowired
+    private KafkaService kafkaService;
+
+    @RequestMapping(value="/api/v1/kafka/sendmessage", method= RequestMethod.GET)
+    ResponseEntity<Object> sendmessage(){
+        kafkaService.testReceive();
+        return ResponseHandler.generateControllerResponse(null, HttpStatus.OK);
+    }
+} 
+
+
+
+
+bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 3 --partitions 2 --topic TestTopicXYZ
+
+bin/kafka-topics.sh --zookeeper localhost:2181 --describe --topic TestTopicXYZ
+
+
+configurations
+1. broker.id
+2. port
+3. log.dirs
+4. zookeeper.connect
+5. delete.topic.enable
+6. auto.create.topics.enable
+7. default.replication.factor
+8. num.partitions
+9. log.retention.ms
+10. log.retention.bytes
+
+11. max.in.flight.requests.per.connections default value is 5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
