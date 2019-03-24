@@ -1,0 +1,218 @@
+
+Arrays.sort() method sorts small integer array of less than 286 element using quicksort and tiny array of elements less than 47 using Insertion sort
+
+Java 8 Lambda expression
+https://javarevisited.blogspot.com/2014/02/10-example-of-lambda-expressions-in-java8.html
+
+reverse words practise interview questions.
+https://www.interviewcake.com/question/python/reverse-words?section=array-and-string-manipulation&course=fc1
+
+
+how to become intemediate in ds and algorithm
+https://www.quora.com/How-long-does-it-take-to-become-an-intermediate-in-DS-and-algorithms
+
+basic of greedy algorithm
+https://www.hackerearth.com/practice/algorithms/greedy/basics-of-greedy-algorithms/practice-problems/algorithm/help-out-the-indian-army/
+https://www.hackerearth.com/practice/algorithms/greedy/basics-of-greedy-algorithms/practice-problems/algorithm/the-falling-eagle-5/#c153107
+
+
+question
+Don't Flip out!
+Rajat Sharma loves his initials (RS). Especially the character “R”. So whenever he sees a string G that contains only characters “R” and “S”. 
+he tries to maximize the occurrence of the letter “R” by flipping characters.
+
+A flip is defined as below:
+
+If the character at position X in the string is ‘R’, a flip will change this character to ‘S’.
+If the character at position X in the string is ‘S’, a flip will change this character to ‘R’.
+A move M(i,j) flips all characters from positions i to j inclusive.
+
+Here 1<=i<=j<=|G| where |G| is the length of the string G. Indexing starts from 1.
+
+So given a string G of consisting of only characters R and S, find out the maximum possible number Rs that can be obtained after performing a single 
+move M(i,j).
+
+Input Format
+
+The first line of input contains an integer T which is the number of test cases. 
+Each test case contains a string G that contains only characters ‘R’ and ‘S’ only.
+
+Output Format:
+
+For each test case print the maximal number of R’s that can be obtained after exactly one move. 
+Print output for each test case in separate line.
+
+Constraints:
+
+1 <= T <= 1000
+
+1 <= |G| <=10^6 (length of string)
+
+Example Input
+
+7
+RSSRS
+RSSR
+RRRR
+SRSRSRS
+R
+S
+SSSSRSSS
+Example Output
+
+4
+4
+3
+4
+0
+1
+7
+Explanation:
+
+In the first test case, if you flip the characters from 2 to 5 (i=2,j=5), inclusive, the string becomes “RRRSR”. So, it contains four R’s. 
+This is the maximum possible number of Rs in this case.
+
+For the second case flip the characters from 2 to 3 (i=2,j=3). 
+After flipping string becomes: RRRR. So, it contains four R’s.
+
+For the fifth test case, after performing the only available move, (i=1, j=1), R changes to S. This makes the maximum possible number of Rs 
+after performing the move 0(!)
+
+
+question
+
+ https://www.youtube.com/watch?v=UzLMhqg3_Wc
+ Find the subarray with maximum product [take the test cases with negative elements] case will be like : -6 2 4 5 -1 -8. Question is the extended version of contiguous subarray with maximum sum.
+Find the missing number in an array of integers.  I.e. [1, 2, 4, ,6, 3, 7, 8] answer: 5
+Find an element in sorted and rotated array.
+	If the elements are duplicate, it is not possible to achieve O(logn) complexity.
+       it revo
+4.	Rotation of an array through juggling algorithm. Look at this again. The loop goes till the GCD(no. Of rotations and n) if GCD is 1 then only in one setlves.
+	Reversal algorithm -> This algo breaks the array in two parts. Till d-1 is one part and from d to n-1 is another part. Reverse first part, then second part. Then reverse the whole array.  https://ideone.com/t1H3et
+      
+5.	Maximum sum in an array so that no two numbers are adjacent
+Maintain two variables one which includes the current element and having the max sum and one which excludes it and max sum till now. Before every step find the max of two.
+
+6.	Sort the elements by frequency. Use BST.
+	Other method is sorting and creating a two d array by count and use indexes in first column.
+Other method is using hashmap and then sorting map based on the value.
+(Read how to sort the map based on value )
+
+7. Count inversion of an array : How away the array is from being sorted.
+Formally speaking, two elements a[i] and a[j] form an inversion if a[i] > a[j] and i < j
+That means how many smaller elements are on the right side of an element.
+Do this by enhanced merge sort. 
+http://www.geeksforgeeks.org/counting-inversions/
+
+8. Two elements in an array whose sum is close to 0. 
+
+Sol: Sort the elements, start two indices, one at the beginning, one in the end. Start sum and keep track of absolute difference. If sum is negative, increase index from end else increase index from start.
+
+9. Check this after doing heap
+
+Find the k largest elements of an array.
+
+10. Find the maximum difference between two elements in an array such that larger number appears after the smaller one.
+Keep track of the max difference so far and and the min number.
+Variation : Maximum difference of two rows in a matrix such that i<j
+
+11. Given an array arr[], find max j-i such that arr[j] > arr[i]. 
+Create two array => one is min array, other is max array
+http://www.geeksforgeeks.org/given-an-array-arr-find-the-maximum-j-i-such-that-arrj-arri/
+
+12. Count smaller elements on right side of an array
+http://www.geeksforgeeks.org/count-smaller-elements-on-right-side/
+
+Use self balancing BST for O(nlogn)
+
+13. Longest increasing subsequence size.
+
+14. Find the maximum repeating number in an array in O(n)
+ time and in O(1) space.
+Use this formula
+increment arr[arr[i]%k] by k, where k will be number of elements in the array.
+Index of Maximum number in this new array will be the maximum occurring element.
+
+Given an array of size n, the array contains numbers in range from 0 to k-1 where k is a positive integer and k <= n.
+
+15. Kth smallest element in row wise and column wise sorted array.
+  Us…
+1. Two identical array finding the missing element
+2. Linked list, Circular linked list and Doubly linked list’s example?
+3. Sum of Consequtive integers 
+Input: 15
+Output: 3
+1+2+3+4+5
+4+5+6
+7+8
+4. Sum of subarrays
+Input:[1,2,3]
+Output: 20
+[1],[2],[3],[1,2],[2,3],[1,2,3]
+5. 2nd largest item in a binary search tree
+6. what is protocol, delegate and category
+7. can we extend the protocol
+8. can protocol values have default values
+9. what is kvo, kvc and why it is there
+10. retain, copy and weak
+11. shallow copy and deep copy ex.
+12. how to migrate, light and hard migration techniques
+13. how to do json serialization
+14. How to sort an array of objects - fastest way
+15. Poping minimum number from stack without popping everything.
+16. Binary search tree to add all greater number to every number.
+17. Merging two sorted array in o(n)
+
+Binary Search Tree
+
+1. Check whether tree is BST or not.
+2. LCA in binary search tree.
+3. Insertion/Deletion/Searching
+
+Binary Tree
+
+1. Mirror of a tree
+2. LCA
+3. Traversal Iteratively(Post Order , Preorder, Inorder)
+4. Boundary Traversal
+5. Left View of a binary tree
+6. Right View of a binary tree
+7. Diameter of tree
+8. Spiral Traversal
+9. Level order traversal
+    10. Connect nodes at same level using constant extra space.(Using Level order/Preorder/Iterative)
+
+Find all the subset(piar) to a given sum.
+Longest Pallindrome
+Find closest k restaurants out of 1 million restaurants from your location  
+Design Facebook contact app with an indicator if an user is online or not  
+https://www.glassdoor.co.in/Interview/Facebook-IOS-Developer-Interview-Questions-EI_IE40772.0,8_KO9,22.htm?countryRedirect=true
+
+* 		Given a 2D array you are allowed to traverse Right or Down. print all possible paths from 0,0 to m,n by traversing either right or down.  
+
+
+https://www.glassdoor.co.in/Interview/Apple-IOS-Developer-Interview-Questions-EI_IE1138.0,5_KO6,19.htm?countryRedirect=true
+
+1. Flatten a list containing n sublists. Ex: [3, 4, [4, [[55]]]] -> [3, 4, 4, 55]   
+Does the binary search for a missing element always return the element just before the place it would have been if it were present?
+https://www.hackerrank.com/challenges/ctci-making-anagrams/problem
+
+
+system design interview question
+https://www.youtube.com/watch?v=UzLMhqg3_Wc
+
+
+Reads 
+https://ideone.com/t1H3et
+http://www.geeksforgeeks.org/counting-inversions/
+http://www.geeksforgeeks.org/given-an-array-arr-find-the-maximum-j-i-such-that-arrj-arri/
+http://www.geeksforgeeks.org/counting-inversions/
+http://www.geeksforgeeks.org/count-smaller-elements-on-right-side/
+https://www.glassdoor.co.in/Interview/Facebook-IOS-Developer-Interview-Questions-EI_IE40772.0,8_KO9,22.htm?countryRedirect=true
+https://www.glassdoor.co.in/Interview/Apple-IOS-Developer-Interview-Questions-EI_IE1138.0,5_KO6,19.htm?countryRedirect=true
+https://www.hackerrank.com/challenges/ctci-making-anagrams/problem
+https://medium.com/@marcellamaki/finding-the-maximum-contiguous-sum-in-an-array-and-kadanes-algorithm-e303cd4eb98c
+https://www.amazon.jobs/en/landing_pages/interviewing-at-amazon
+
+jpa like query
+https://stackoverflow.com/questions/25362540/like-query-in-spring-jparepository

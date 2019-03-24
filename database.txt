@@ -1,0 +1,225 @@
+Stored procedures
+indexes
+	primary, secondary,
+
+ clustered - Search data should be sorted and non key on particular column.
+	     index table will have unique and sorted value for key. And have pointers for search table.
+	 and non clustered
+ (clusterred indexes)
+
+ordered file   primary index(sparse)   clustered index(sparse)
+unordered file secondary index secondary index
+		key		non key
+Triggers
+Events
+Cursor
+partition
+Pos
+Joins
+
+http://dev.mysql.com/doc/mysql/en/error-handling.html.
+postgress
+mysql
+
+kafka in spring
+redis
+block chain
+
+delimiter //
+create procedure GetTotalUserCount()
+begin
+	declare total int default 0;
+	select count(*) into total from user;
+	select total;
+end //
+delimiter ;
+
+delimiter //
+create procedure GetUserIdByExchangeId(in exchangeId int)
+begin
+	set exchangeId = exchangeId + 1;
+	select id, exchange_id from user where exchange_id = exchangeId;
+end //
+delimiter ;
+
+delimiter //
+create procedure GetTotalUser(in exchangeId int, out total int)
+begin
+	select count(*) into total from user where exchange_id = exchangeId;
+end //
+delimiter ;
+
+call GetTotalUser(1, @total)
+select @total
+
+delimiter //
+
+create procedure GetUserId(out totalIndividual int, out totalCorporate int)
+begin
+	select count(*) into totalIndividual from user where user_type = 'INDIVIDUAL';
+	select count(*) into totalCorporate from user where user_type = 'CORPORATE';
+end //
+delimiter ;
+call GetUserId(@individual, @corporate);
+select @individual, @corporate;
+
+create procedure GetUserId(out totalIndividual int, out totalCorporate int)
+begin
+	select count(*) into totalIndividual from user where user_type = 'INDIVIDUAL';
+	select count(*) into totalCorporate from user where user_type = 'CORPORATE';
+end //
+delimiter ;
+
+delimiter //
+create procedure isUpdatable(in userId int, out isUpdatable bit(1))
+begin
+declare status varchar(20);
+select a.status into status from aml a where a.user_id = userId;
+case status
+	when 'VERIFIED' then
+		set isUpdatable = false;
+	when 'UNVERIFIED' then
+		set isUpdatable = true;
+	else
+		set isUpdatable = false;
+end case;
+end //
+delimiter ;
+		
+
+delimiter //
+create procedure isUpdatable(in userId int, out isUpdatable bit(1))
+begin
+declare status varchar(20);
+select a.status into status from aml a where a.user_id = userId;
+case status
+	when 'VERIFIED' then
+		set isUpdatable = false;
+	when 'UNVERIFIED' then
+		set isUpdatable = true;
+
+end case;
+end //
+delimiter ;
+
+delimiter //
+create procedure getUserId(out userIdList varchar(255))
+begin
+	declare count int default 1;
+	set userIdList = '';
+	while count < 16 do
+		set userIdList = concat(userIdList, count, ',');
+		set count = count + 1;
+	end while; 
+end //
+delimiter ;
+
+
+
+delimiter //
+CREATE PROCEDURE getUserIds()
+BEGIN
+   -- Declare local variable
+   declare done boolean default 0;
+   declare userId int;
+   -- Declare the cursor
+   DECLARE userIds CURSOR
+   FOR
+   SELECT id FROM user;
+   DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done=1;
+   -- Open the cursor
+   OPEN userIds;
+   -- Fetches result
+   repeat 
+       FETCH userIds INTO userId;
+       select userId;
+   until done end repeat;
+  
+   -- Close the cursor
+   CLOSE userIds;
+END //
+
+delimiter ;
+
+
+delimiter //
+CREATE PROCEDURE getUserIds()
+BEGIN
+   -- Declare local variable
+
+   declare isFinished int default 0;
+   declare userId int;
+   declare email varchar(50);
+   -- Declare the cursor
+   DECLARE userIds CURSOR
+   FOR
+   SELECT u.id, s.email FROM user u, security s where u.id = s.user_id;
+   DECLARE CONTINUE HANDLER FOR NOT FOUND SET isFinished = 1; 
+CREATE TABLE IF NOT EXISTS user_email (user_id int, email varchar(50));
+   -- Open the cursor
+   OPEN userIds;
+   -- Fetches result
+   repeat 
+       FETCH userIds INTO userId, email;
+       select userId, email;
+       insert into user_email(user_id, email) values (userId, email);
+   until isFinished = 1 end repeat;
+  
+   -- Close the cursor
+   CLOSE userIds;
+END //
+
+delimiter ;
+
+
+
+SHOW PROCEDURE STATUS WHERE db = 'classicmodels';
+SHOW CREATE PROCEDURE stored_procedure_name
+
+delimiter //
+create procedure findArticle(in article_id int) 
+begin
+declare c int;
+select count(*) into c from article where id = article_id;
+
+if c = 0 then 
+ SIGNAL SQLSTATE '45000'
+ SET MESSAGE_TEXT = 'Article not found';
+end if;
+end //
+delimiter ;
+
+
+delimiter //
+create function getLevel(requestId int) returns varchar(20)
+begin
+declare level varchar(20);
+declare levelId int;
+select w.auth_level into levelId from withdraw_request w where w.id = requestId;
+case levelId
+	when 1 then
+		set level = 'INITIATOR';
+	when 2 then
+		set level = 'VERIFIER';
+	when 3 then
+		set level = 'APPROVER';
+        else 
+		set level = 'SUPER-ADMIN';
+end case;
+return (level);
+end //
+
+delimiter ;
+
+select auth_level, getLevel(auth_level) from withdraw_request order by id desc limit 10;
+
+
+=====================
+
+
+create table author(
+id int,
+first_name varchar(20),
+last_name varchar(20),
+pancard varchar(40)
+);

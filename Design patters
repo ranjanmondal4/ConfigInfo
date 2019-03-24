@@ -1,0 +1,32 @@
+Design Patterns
+
+Type: Creational
+Singleton
+Factory
+Abstract Factory
+Builder
+Prototype
+
+
+Type: Structural 
+Adapter
+Composite
+Proxy
+Fly weight
+Facade
+Bridge
+Decorator
+
+
+Type: Behavioural
+Template method
+Mediator
+Chain of Responsibility
+Observer
+Strategy
+Command
+State
+Visitor
+Iterator
+Interpretor
+Memento
