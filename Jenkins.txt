@@ -1,0 +1,98 @@
+Jenkins
+
+chapter 1: Starting Jenkins on its own standalone server (jetty / winston server).
+Download war file from jenkins.io LTS
+create a folder named jenkins and paste jenkins.war file in it.
+From command prompt, go to location of jenkins.war
+run java -jar jenkins.war and enter.
+
+it is extracting files and winston is server. Jenkins is up and running on port 8080.
+It will also give the password, please copy and save it for future reference. It can be found at
+eg: 04a0aa77d2114ef3ae162d7e909e06be
+.jenkins/secrets/initialAdminPassword
+
+go to browser http://localhost:8080 and paste the password.
+It will now suggest to install some pluggins and select suggested pluggins and install it.
+You can create any user or continue as admin.
+
+Go to .jenkins folder in /usr
+
+
+Chapter 2: on tomcat server
+requirements: java and tomcat server 5+
+
+step 1: Go to tomcat.apache.org and download tomcat 8 zip.file
+Unzip and place tomcat folder in any locations. Copy/place the jenkins.war inside tomcat/webapps folder
+
+go to command prompt, go to /usr/ranjan/documents/tomcat/bin and make all files executable
+chmod +x *.sh
+
+start tomcat server:  startup.sh
+stop tomcat server: stop.sh
+
+Go to browser http://localhost:8080/jenkins
+
+Now jenkins is running inside tomcat server
+
+
+to run jenkins standlone on different port. go to jenkins
+run-   java -jar jenkins.war --httpPort=9090
+
+
+chapter 3: change your home directory of jenkins.
+Login the jenkins -> Manage Jenkins -> configure systems
+You will see homedirectory ==  /usrs/ranjan/.jenkins
+
+step 1: copy all data from home directory to new directory.
+change JENKINS_HOME to new directory
+export JENKINS_HOME=/usr/ranjan/documents/jenkins/jenkinsHome/
+
+.bash_profile file
+
+to see system properties
+localhost:8080/systeminfo
+
+chapter 4: CLI for jenkins
+start jenkins -> Manage Jenkins -> configure global security -> enable security is checked.
+go to http://localhost:8080/cli and download jenkins-jar, place at any locations.
+
+test Jar by go to locations where jenkins cli jar and copy the cli command and run with passphrase.
+Passphrase in admin -> confiure -> ssh public keys
+
+Manage Jenkins -> configure global security -> authorizaton -> checking anyone can do anything
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

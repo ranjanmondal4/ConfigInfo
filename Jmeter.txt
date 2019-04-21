@@ -1,0 +1,17 @@
+
+To run jmx script on command line
+==============================================================
+1. go to apache-jmeter/bin folder
+2. jmeter -n -t [location of your jmeter test script]
+ -l [location of result file]
+
+eg.
+./jmeter -n -t /home/ranjan/Documents/apache-jmeter-5.0/bin/test-plans/fetch_all_user.jmx -l /home/ranjan/Documents/apache-jmeter-5.0/bin/results_of_test_plans/fetch_user.csv
+
+
+for help
+================
+jmeter -h
+
+To create mysql connections
+jdbc:mysql://localhost:3306/belfrics

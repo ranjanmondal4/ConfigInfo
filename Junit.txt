@@ -83,25 +83,25 @@ Just copy paste below code in the text file.
 
 Select run command from Run tab in intellJ to run the test.
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS) denotes the only instance of the class created for all test methods written inside it.
-@DisplayName("") denotes readable user-friendly name to group test in class. It is very helpful and standard in many organizations.
+TestInstance(TestInstance.Lifecycle.PER_CLASS) denotes the only instance of the class created for all test methods written inside it.
+DisplayName("") denotes readable user-friendly name to group test in class. It is very helpful and standard in many organizations.
 
-@BeforeAll The method annotated with this annotation will run before all test methods in the class. It is used for initializing members 
+BeforeAll The method annotated with this annotation will run before all test methods in the class. It is used for initializing members 
 		of the class which is used by every test methods.
 
-@BeforeEach The method will execute before every test method.
+BeforeEach The method will execute before every test method.
             Here we have injected TestInfo and TestReporter. TestInfo instance has the information of Class name, Method name, and Tag name.
             TestReporter instance will report on the console with time stamp information. Together they will report required information that function is running currently.
 
-@Nested	   It is used to nest the similar test methods inside the nested class. Annotate the nested class with this annotation.
+Nested	   It is used to nest the similar test methods inside the nested class. Annotate the nested class with this annotation.
 
-@Test      Methods annotated with this will be executed with JUnit Platform. The test method can be passed or failed according to expected
+Test      Methods annotated with this will be executed with JUnit Platform. The test method can be passed or failed according to expected
 		and the actual result.
 
-@Disabled   This annotation disabled the test method to get executed by JUnit. When you don't want your test to get executed you can 
+Disabled   This annotation disabled the test method to get executed by JUnit. When you don't want your test to get executed you can 
 	     use this on the top of the test method.
 
-@RepeatedTest(n) This annotation will repeat the test by n times.
+RepeatedTest(n) This annotation will repeat the test by n times.
 
 assertEquals(expected_value, actual value from method, Message when test got failed);
 
