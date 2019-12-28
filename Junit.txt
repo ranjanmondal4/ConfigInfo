@@ -1,179 +1,100 @@
-Junit 5 is a new framework for writing test cases. It is a newer version as against Junit 4 and Junit 3.
-Java 8 comes with very new and notably features like Lambda expression. So for testing new features with ease Junit 5 comes.
 
-JUnit 5 is equal to JUnit Platform + JUnit Jupiter + JUnit Vintage
+Please Approve the following
+Blog - "Database Testing or load testing via Apache JMeter"
+WFH on 5 Dec and 20 Dec, 2019
 
-JUnit Platform is a foundation for launching testing frameworks on the JVM. It defines the Test Engine APIs for developing a testing framework which will run on the platform. The platform provides a Console Launcher to launch the platform from the command line like "mvn test".
-It also provides JUnit 4 based Runner for running any TestEngine on the platform in a JUnit 4 based environment. 
+Database Testing via Jmeter
 
+Database Testing - GUI is most visible part of the application, so tester usually spend more time in testing it. Here database testing means to test following points in the application
+i. All information should be saved correctly and should be seen to user correctly.
+ii. No partial information should saved in the database.
+iii. Unauthorized users should be able to access the system.
+iv. Constraints should be not violated in the database while insertion and updates.
 
-JUnit Jupiter provides new APIs for writing test in JUnit 5. It creates the tests that are run by Test Engine described above.
-It includes new programming models and annotations for writing test.
+It involves validating the schema, tables, triggers and stored procedures etc and test the load / stress of various complex queries and stored procedures. It checks its responsives. It involves constraints and data consistencies.
 
-JUnit Vintage gives a Test Engine for running JUnit 4 and JUnit 3.
-It’s there is backward compatibility.
+First download mysql-connector-java-x.x.jar and place in apache-jmeter/lib folder and restart it.
 
-
-First, you have to add few dependencies in POM.xml in spring boot application and update the maven.
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-		<junit-jupiter.version>5.3.2</junit-jupiter.version>
-		<mockito.version>2.24.0</mockito.version>
-	</properties>
-
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<version>${junit-jupiter.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>${junit-jupiter.version}</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-surefire-plugin</artifactId>
-			<version>3.0.0-M1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-junit-jupiter</artifactId>
-			<version>2.23.0</version>
-			<scope>test</scope>
-		</dependency>
+Testing simple query via Jmeter.
+Open Jmeter.
+Select File -> New.
+Set number of threads to 10
+Set ramp-up period to 1 seconds and Loop count to 3.
+Set the type of pool to select statement.
+Set SQL query to any select query you want. 
 
 
+Right click on Test Plan
+	Select Add -> Sampler -> JDBC Request
+Set variable name of pool in JDBC Connection configuration to pool.
+Select transaction isoloation to DEFAULT
 
-For simplicity create a utility class MathUtils which contain some arithmetic operations.
+Set following configuration
+Database URL -> jdbc:mysql://localhost:3306/{database-name}
+eg. jdbc:mysql://localhost:3306/belrium
+JDBC Driver class -> com.mysql.jdbc.Driver
+Username -> root
+Password -> root
 
-package com.trader.utils;
+Right click on Test Plan
+	Select Add -> Listener -> View Results Tree
+			       -> View Results in Table
 
-public class MathUtils {
+Right click on Test Plan
+	Select Add -> Config Element -> JDBC Connection Configuration
+Set variable name for created pool to "pool"
 
-    public int add(int a, int b){
-        return a + b;
-    }
+Thread Group
+i. continue or start next Thread loop 
+	stop thread, stop test, stop test now
 
-    public int divide(int a, int b){
-        return a / b;
-    }
+ii. Thread Properties
+Number of threads (users) 10
+Ramp up period - means when the creations of users takes places like 1 seconds
+then 10 threads created in the interval 1/10 seconds.
 
-    public int multiply(int a, int b){
-        return a * b;
-    }
+Loop count - Number of requests
+if 1, then number of requests are 1 * 10 = 10 requests.
 
-    public int subtract(int a, int b){
-        return a - b;
-    }
-}
+Schedular is for scheduling tasks in time intervals.
 
+Assertions
+i. Response Assertion - text, response code etc
+ii. Duration Assertion - 2000 ms
+iii. Size Assertion - Bytes returned
+iv. HTML Assertion - Valid html or not
+   
 
-Now select the class name using a cursor and click on Test under Navigate in IntelliJ.
-It will create a new test class for MathUtils.java.
-Just copy paste below code in the text file.
+Running it from command line
+./jmeter -n -t <jmx file> -l <result file>
 
-Select run command from Run tab in intellJ to run the test.
+-n for non gui mode
+-t location of jmeter script
+-l location of result file
 
-TestInstance(TestInstance.Lifecycle.PER_CLASS) denotes the only instance of the class created for all test methods written inside it.
-DisplayName("") denotes readable user-friendly name to group test in class. It is very helpful and standard in many organizations.
+To run create html reports
+./jmeter -n -t <jmx file> -l <result file>
+	-e -o <location of output folder>
 
-BeforeAll The method annotated with this annotation will run before all test methods in the class. It is used for initializing members 
-		of the class which is used by every test methods.
+./jmeter -n -t <jmx file> -l <result file> -e -o <location of output folder>
 
-BeforeEach The method will execute before every test method.
-            Here we have injected TestInfo and TestReporter. TestInfo instance has the information of Class name, Method name, and Tag name.
-            TestReporter instance will report on the console with time stamp information. Together they will report required information that function is running currently.
+-e to generate html report
 
-Nested	   It is used to nest the similar test methods inside the nested class. Annotate the nested class with this annotation.
-
-Test      Methods annotated with this will be executed with JUnit Platform. The test method can be passed or failed according to expected
-		and the actual result.
-
-Disabled   This annotation disabled the test method to get executed by JUnit. When you don't want your test to get executed you can 
-	     use this on the top of the test method.
-
-RepeatedTest(n) This annotation will repeat the test by n times.
-
-assertEquals(expected_value, actual value from method, Message when test got failed);
-
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@DisplayName("Testing MathUtils")
-class MathUtilsTest {
-
-    MathUtils mathUtils;
-
-    @BeforeAll
-    void init(){
-        mathUtils = new MathUtils();
-    }
-
-    @BeforeEach
-    void beforeEach(TestInfo testInfo, TestReporter testReporter){
-        testReporter.publishEntry("Currently running class name " + testInfo.getTestClass()
-            + " method name " + testInfo.getTestMethod());
-    }
-
-    @Nested
-    @DisplayName("add method")
-    class AddTest {
-
-        @Test
-        @DisplayName("when adding two positive numbers")
-        void addPositive() {
-            assertEquals(2, mathUtils.add(1, 1), "should return right sum");
-        }
+./jmeter -g "location of csv file" -o "location of output folder"
 
 
-        @Test
-        @DisplayName("when adding positive and negative numbers")
-        void addPositiveAndNegative() {
-            assertEquals(0, mathUtils.add(1, -1), "should return right sum");
-        }
+functions
+${__log("Sample test")}
+${__time(dd MM YYYY HH mm ss)}
+${__threadNum}
 
+======== Real world junit test cases
+think time - simulatet actual user actions with timings/delays
+Pacing - controlled ramp-up and down of virtual users.
+	- control timing between iterations
+	- achieve x iterations in y mins/sec
 
-        @Test
-        @DisplayName("when adding two negative numbers")
-        void addNegative() {
-            assertEquals(-2, mathUtils.add(-1, -1), "should return right sum");
-        }
-    }
+https://octoperf.com/blog/2017/03/09/how-to-extract-data-from-json-response-using-jmeter/
 
-
-    @Test
-    @DisplayName("Division of two numbers")
-    //@Disabled
-    void divide() {
-       // boolean isServerUp = false;
-       // System.out.println(System.getProperty("ENV"));
-      //  Assumptions.assumeTrue(isServerUp);
-        assertThrows(ArithmeticException.class,() -> mathUtils.divide(1, 0),
-                "Arithmetic Exception found");
-    }
-
-    @Test
-    @DisplayName("Multiplication of two numbers")
-    void multiply() {
-       assertAll(()-> assertEquals(4, mathUtils.multiply(2, 2)),
-               ()-> assertEquals(0, mathUtils.multiply(2, 0)),
-               ()-> assertEquals(-4, mathUtils.multiply(2, -2)),
-               ()-> assertEquals(4, mathUtils.multiply(-2, -2)));
-    }
-
-    @RepeatedTest(3)
-    @DisplayName("Subtraction of two numbers")
-    void addNegative(RepetitionInfo repetitionInfo) {
-       // System.out.println("repeation " + repetitionInfo.getCurrentRepetition());
-        assertEquals(1, mathUtils.subtract(4, 3),
-                () -> "should return subtraction value");
-    }
-}
-
+Writing test cases using postman
+https://medium.com/velotio-perspectives/api-testing-using-postman-and-newman-6c68c33303fc
