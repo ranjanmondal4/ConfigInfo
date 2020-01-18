@@ -1,0 +1,146 @@
+# Links for setup Redis-Cluster
+i. https://myadventuresincoding.wordpress.com/2018/04/27/redis-setup-a-test-cluster-on-ubuntu/
+ii. https://medium.com/@iamvishalkhare/create-a-redis-cluster-faa89c5a6bb4
+
+Followed link i.
+
+Go to Redis-<version> -> utils -> create-cluster
+inside you will find create-cluster script file. Add following lines.
+
+# Settings
+PORT=7000
+TIMEOUT=10000
+NODES=6
+REPLICAS=1
+
+Run following Command
+./create-cluster start
+
+If you do an “ls” in the folder you will notice that some files have been created:
+
+Each node has a log file (For example: 7001.log)
+Each node has a cluster configuration file (For example: nodes-7001.conf)
+
+to join the Nodes as a Cluster
+
+sudo apt-get install ruby-full
+sudo gem install redis
+
+To create a cluster where you only need to connect to it from the local machine you can use:
+cd redis-4.0.9/src
+i. ./redis-trib.rb create --replicas 1 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005 127.0.0.1:7006
+or
+ii. ./redis-cli --cluster create 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005 127.0.0.1:7006 --cluster-replicas 1
+
+
+
+if successful, print following message.
+>>> Performing hash slots allocation on 6 nodes...
+Master[0] -> Slots 0 - 5460
+Master[1] -> Slots 5461 - 10922
+Master[2] -> Slots 10923 - 16383
+Adding replica 127.0.0.1:7005 to 127.0.0.1:7001
+Adding replica 127.0.0.1:7006 to 127.0.0.1:7002
+Adding replica 127.0.0.1:7004 to 127.0.0.1:7003
+>>> Trying to optimize slaves allocation for anti-affinity
+[WARNING] Some slaves are in the same host as their master
+M: 98310961e6ace9a14fa39c87b366119e8dabc597 127.0.0.1:7001
+   slots:[0-5460] (5461 slots) master
+M: 091e1a74ebd235c6dc60558af1d763ead7db0f50 127.0.0.1:7002
+   slots:[5461-10922] (5462 slots) master
+M: 68c1083c6dcdf7c760bc6ac93473075e865073bf 127.0.0.1:7003
+   slots:[10923-16383] (5461 slots) master
+S: e7cdb260a533a85fc0adc9db3682e39fa994c9ef 127.0.0.1:7004
+   replicates 98310961e6ace9a14fa39c87b366119e8dabc597
+S: 1e8dec8ebe95a447985f7711c828a51effd5b6f7 127.0.0.1:7005
+   replicates 091e1a74ebd235c6dc60558af1d763ead7db0f50
+S: 74d8a03d8889c4eb387ac6fc9b1e53d70bf45f0f 127.0.0.1:7006
+   replicates 68c1083c6dcdf7c760bc6ac93473075e865073bf
+Can I set the above configuration? (type 'yes' to accept): yes
+>>> Nodes configuration updated
+>>> Assign a different config epoch to each node
+>>> Sending CLUSTER MEET messages to join the cluster
+Waiting for the cluster to join
+...
+>>> Performing Cluster Check (using node 127.0.0.1:7001)
+M: 98310961e6ace9a14fa39c87b366119e8dabc597 127.0.0.1:7001
+   slots:[0-5460] (5461 slots) master
+   1 additional replica(s)
+S: e7cdb260a533a85fc0adc9db3682e39fa994c9ef 127.0.0.1:7004
+   slots: (0 slots) slave
+   replicates 98310961e6ace9a14fa39c87b366119e8dabc597
+M: 68c1083c6dcdf7c760bc6ac93473075e865073bf 127.0.0.1:7003
+   slots:[10923-16383] (5461 slots) master
+   1 additional replica(s)
+M: 091e1a74ebd235c6dc60558af1d763ead7db0f50 127.0.0.1:7002
+   slots:[5461-10922] (5462 slots) master
+   1 additional replica(s)
+S: 1e8dec8ebe95a447985f7711c828a51effd5b6f7 127.0.0.1:7005
+   slots: (0 slots) slave
+   replicates 091e1a74ebd235c6dc60558af1d763ead7db0f50
+S: 74d8a03d8889c4eb387ac6fc9b1e53d70bf45f0f 127.0.0.1:7006
+   slots: (0 slots) slave
+   replicates 68c1083c6dcdf7c760bc6ac93473075e865073bf
+[OK] All nodes agree about slots configuration.
+>>> Check for open slots...
+>>> Check slots coverage...
+[OK] All 16384 slots covered.
+
+
+# otherwise you have to run following commands
+$./redis-cli -p <port-number>
+127.0.0.1:7000> flushall
+127.0.0.1:7000> cluster reset
+127.0.0.1:7000> exit
+
+# gives info about particular node
+./redis-cli [-a <password>] -p <port> INFO Replication
+output:
+role:master
+connected_slaves:1
+slave0:ip=127.0.0.1,port=7006,state=online,offset=2562,lag=0
+master_replid:ef320efae0b6c474fdde11195b05cea490245faf
+master_replid2:0000000000000000000000000000000000000000
+master_repl_offset:2562
+second_repl_offset:-1
+repl_backlog_active:1
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:1
+repl_backlog_histlen:2562
+
+#Cluster checking
+./redis-cli --cluster check <ip>:<port-number>
+
+output:
+127.0.0.1:7001 (82d22e2d...) -> 0 keys | 5461 slots | 1 slaves.
+127.0.0.1:7002 (54064c03...) -> 0 keys | 5462 slots | 1 slaves.
+127.0.0.1:7003 (0d8e4edd...) -> 0 keys | 5461 slots | 1 slaves.
+[OK] 0 keys in 3 masters.
+0.00 keys per slot on average.
+>>> Performing Cluster Check (using node 127.0.0.1:7001)
+M: 82d22e2dc2389b6fef1965ce8009fd4b360517a5 127.0.0.1:7001
+   slots:[0-5460] (5461 slots) master
+   1 additional replica(s)
+S: f1098e94617b54fc5a756f3fe8152d798c1d2535 127.0.0.1:7005
+   slots: (0 slots) slave
+   replicates 0d8e4edd01a944bbc9b1324bc50fa09103a44072
+M: 54064c036f8cd754bcc8b8d45eb3a2b7c63901cb 127.0.0.1:7002
+   slots:[5461-10922] (5462 slots) master
+   1 additional replica(s)
+S: ee2fb5c1109a0b1a656560729f01bebe4baa0ff6 127.0.0.1:7004
+   slots: (0 slots) slave
+   replicates 54064c036f8cd754bcc8b8d45eb3a2b7c63901cb
+M: 0d8e4edd01a944bbc9b1324bc50fa09103a44072 127.0.0.1:7003
+   slots:[10923-16383] (5461 slots) master
+   1 additional replica(s)
+S: 8377c9ec455ec4fc377517d783e4ea5a932284c1 127.0.0.1:7006
+   slots: (0 slots) slave
+   replicates 82d22e2dc2389b6fef1965ce8009fd4b360517a5
+
+# to communicate redis node in the cluster
+./redis-cli -c -p <port-number>
+
+https://howto.lintel.in/install-redis-cluster/
+
+# to uninstall redis
+http://grainier.net/how-to-uninstall-redis-server-from-ubuntu/
